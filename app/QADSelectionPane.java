@@ -15,17 +15,20 @@ public class QADSelectionPane {
   private String[] labels;
 
 
+  LoadConfig cc;
+
+
   public QADSelectionPane(AppUtils inAppUtils, PVector iPos, PVector iDim){
     appUtils = inAppUtils;
     app = appUtils.app;
 
     labels = new String[]{
-      "Config Name",  
-      "Config Label", 
-      "GZDoom Path",  
-      "iWAD Path",    
-      "WAD Path(s)",  
-      "DEH Path (A/A)",
+      "Config Name",
+      "Config Label",
+      "GZDoom Path",
+      "iWAD Path",
+      "WAD Path(s)",
+      "DEH/BEX Path",
       "Gameplay WAD",
     };
 
@@ -37,9 +40,11 @@ public class QADSelectionPane {
     dim=in_dim;
   }
 
-  public void render(){
+  public void update(){
+    cc = appUtils.curCfig;
+  }
 
-    
+  public void render(){
     app.strokeWeight(2);
     Pgfx.strokenofill(app,0,0,128);
     app.rectMode(PApplet.CORNER);
@@ -81,26 +86,26 @@ public class QADSelectionPane {
 
 
   private String dispVal(int i){
-    if(appUtils.curCfig==null){i=-1;}
+    if(cc==null){i=-1;}
     switch (i) {
-      case 0:  return appUtils.curCfig.value==null      ? NA : appUtils.curCfig.value;
-      case 1:  return appUtils.curCfig.label==null      ? NA : appUtils.curCfig.label;
-      case 2:  return appUtils.curCfig.fpath_gzd==null  ? NA : appUtils.curCfig.fpath_gzd;
-      case 3:  return appUtils.curCfig.fpath_iwad==null ? NA : appUtils.curCfig.fpath_iwad;
-      case 4:  return appUtils.curCfig.fpath_wad==null  ? NA : appUtils.curCfig.fpath_wad;
-      case 5:  return appUtils.curCfig.fpath_deh==null  ? NA : appUtils.curCfig.fpath_deh;
-      case 6:  return appUtils.curCfig.fpath_gwad==null ? NA : appUtils.curCfig.fpath_gwad;
+      case 0:  return cc.value==null      ? NA : cc.value;
+      case 1:  return cc.label==null      ? NA : cc.label;
+      case 2:  return cc.fpath_gzd==null  ? NA : cc.fpath_gzd;
+      case 3:  return cc.fpath_iwad==null ? NA : cc.fpath_iwad;
+      case 4:  return cc.fpath_wad==null  ? NA : cc.fpath_wad;
+      case 5:  return cc.fpath_deh!=null  ? cc.fpath_deh : cc.fpath_bex!=null ? cc.fpath_bex : NA;
+      case 6:  return cc.fpath_gwad==null ? NA : cc.fpath_gwad;
       default: return NA; 
     }
   }
 
   private void txtlbl_FUL(){
     app.text("Full Launch Command:", xOff, yOff);
-    if(appUtils.curCfig==null){return;}
+    if(cc==null){return;}
     xOff=32;
     yOff+=16;
     app.fill(0,160,0);
     app.textSize(14);    
-    app.text(appUtils.curCfig.toLaunchCommand(), xOff,yOff,dim.x-24,128);
+    app.text(cc.toLaunchCommand(), xOff,yOff,dim.x-24,128);
   }
 }

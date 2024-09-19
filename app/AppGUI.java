@@ -67,11 +67,8 @@ public class AppGUI {
 
   public void onMousePressed(){uim.onMousePressed();}
   public void onMouseWheel(int v){uim.onMouseWheel(v);}
-  public void update(){uim.update();}
-  public void render(){
-    uim.render();
-    shittyPane.render();
-  }
+  public void update(){uim.update(); shittyPane.update();}
+  public void render(){uim.render(); shittyPane.render();}
   
 }
 

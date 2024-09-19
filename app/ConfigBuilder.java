@@ -15,6 +15,8 @@ public class ConfigBuilder {
 
   enum SpecFlag {ALT_LEV_WAD};
 
+  private static boolean notNullish(String s){return s!=null && !s.isEmpty();}
+
   public static LoadConfig[] build(AppUtils au, String dirName){
     String dirPath = FileSysUtils.pathConcat(au.getFilepath(EResPath.DP_WADS),dirName);
     String[] _loadinfoFilename = new String[1];
@@ -44,7 +46,8 @@ public class ConfigBuilder {
     //> Parse-&-Process spec for each possible component of `loadinfo`
     String[] wadSpec  = loadinfo_parseWAD(au, loadInfObJSON,dirPath);
     IwadType iwadSpec = loadinfo_parseIWAD(au, loadInfObJSON);
-    String   dehSpec  = loadinfo_parseDeHackEd(loadInfObJSON, wadSpec, dirPath);
+    String   dehSpec  = loadinfo_parseDeh(loadInfObJSON, wadSpec, dirPath);
+    String   bexSpec  = loadinfo_parseBex(loadInfObJSON, wadSpec, dirPath);
     boolean  britspec = loadinfo_parseBMaps(loadInfObJSON);
     String   gwadspec = loadinfo_parseGWAD(loadInfObJSON);
     SpecFlag flagSpec = loadinfo_parseFlags(loadInfObJSON);
@@ -56,6 +59,7 @@ public class ConfigBuilder {
       .setLbl(dirName)
       .setFilepath_WAD(wadSpec[0])
       .setFilepath_DEH(dehSpec)
+      .setFilepath_BEX(bexSpec)
       .setFilepath_IWAD(iwadFilepathWithType(au, iwadSpec))
       .setFilepath_BRIT(britspec)
       .setFilepath_GWAD(gwadspec));
@@ -101,9 +105,6 @@ public class ConfigBuilder {
     return null;
   }
 
-
-
-
   private static IwadType iwadTypeWithString(String s){
     if(s==null){return IwadType.NOSPEC;}
     if(s.equals("doom")){return IwadType.DOOM1;}
@@ -129,7 +130,7 @@ public class ConfigBuilder {
     try {if(jObj.getString("wad")!=null && !jObj.getString("wad").isEmpty()){return new String[]{
       FileSysUtils.pathConcat(wadDir,jObj.getString("wad"))};}} catch (Exception e){;}
     //> Handles implicit multi-wad specification
-    try {if(jObj.getBoolean("wad")==true){return au.getWADFilenamesFromDir(wadDir);}} catch (Exception e){;}
+    try {if(jObj.getBoolean("wad")){return au.getWADFilenamesFromDir(wadDir);}} catch (Exception e){;}
     //> Handles explicit multi-wad specification (BOTH standard and for use with `ALT_LEV_WAD` flag)
     try {if(jObj.getJSONArray("wad")!=null){
       String[] jArr=jObj.getJSONArray("wad").toStringArray();
@@ -148,20 +149,35 @@ public class ConfigBuilder {
     return iwadTypeWithString(spec_iwad);
   }
 
-  private static String loadinfo_parseDeHackEd(JSONObject jObj, String[] parsedWAD, String wadDir){
-    //> Handles implicit deh specification
+  private static String loadinfo_parseDeh(JSONObject jObj, String[] parsedWAD, String wadDir){
+    //> Handles implicit specification
     try {
-      if(jObj.getBoolean("deh")==true){
+      if(jObj.getBoolean("deh")){
         return parsedWAD[0].substring(0,parsedWAD[0].length()-3)+"deh";
       }
     } catch (Exception e){;}
-    //> Handles explicit deh specification
+    //> Handles explicit specification
     try {
       if(jObj.getString("deh")!=null && !jObj.getString("deh").isEmpty()){
         return FileSysUtils.pathConcat(wadDir,jObj.getString("deh")+".deh");
       }
     } catch (Exception e){;}
-    //> Handles no deh specification
+    //> Handles no specification
+    return null;
+  }
+
+  private static String loadinfo_parseBex(JSONObject jObj, String[] parsedWAD, String wadDir){
+    //> Handles implicit specification
+    try {
+      if(jObj.getBoolean("bex")){return parsedWAD[0].substring(0,parsedWAD[0].length()-3)+"bex";}
+    }
+    catch (Exception e){;}
+    //> Handles explicit specification
+    try {
+      String s = jObj.getString("bex");
+      if(notNullish(s)){return FileSysUtils.pathConcat(wadDir,s+".bex");}
+    } catch (Exception e){;}
+    //> Handles no specification
     return null;
   }
 
@@ -179,8 +195,9 @@ public class ConfigBuilder {
   }
 
   private static SpecFlag loadinfo_parseFlags(JSONObject jObj){
-    if(jObj.getString("flags")!=null && jObj.getString("flags").contains("ALT_LEV_WAD")){return SpecFlag.ALT_LEV_WAD;}
+    if(jObj.getString("flags")!=null && jObj.getString("flags").contains("ALT_LEV_WAD")){
+      return SpecFlag.ALT_LEV_WAD;
+    }
     return null;
   }
-
 }

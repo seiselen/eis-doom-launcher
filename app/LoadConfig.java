@@ -18,6 +18,8 @@ public class LoadConfig {
   String fpath_iwad;
   /** DeHackEd file */
   String fpath_deh;
+  /** BoomExDeh file */
+  String fpath_bex;
   /** Mapset WAD|PK3 */
   String fpath_wad;
   /** Gameplay WAD|PK3 */
@@ -26,9 +28,9 @@ public class LoadConfig {
   String fpath_brit;
 
   public LoadConfig(AppUtils iAppUtils){
-    appUtils   = iAppUtils;
-    value  = "";
-    label = "";
+    appUtils = iAppUtils;
+    value    = "";
+    label    = "";
     initDefaultVals();
   }
 
@@ -60,32 +62,31 @@ public class LoadConfig {
   }
 
   public LoadConfig setFilepath_GZD(String fp){
-    if(fp!=null){fpath_gzd=fp;}
-    return this;
+    if(fp!=null){fpath_gzd=fp;} return this;
   }
   
   public LoadConfig setFilepath_WAD(String fp){
-    if(fp!=null){fpath_wad=fp;}
-    return this;
+    if(fp!=null){fpath_wad=fp;} return this;
   }
   
   public LoadConfig setFilepath_DEH(String fp){
-    if(fp!=null){fpath_deh=fp;}
-    return this;
+    if(fp!=null){fpath_deh=fp;} return this;
   }
-  
+
+  public LoadConfig setFilepath_BEX(String fp){
+    if(fp!=null){fpath_bex=fp;} return this;
+  }
+
   public LoadConfig setFilepath_IWAD(String fp){
-    if(fp!=null){fpath_iwad=fp;}
-    return this;
+    if(fp!=null){fpath_iwad=fp;} return this;
   }
   
   public LoadConfig setFilepath_BRIT(boolean v){
-    if(!v){fpath_brit=null;}
-    return this;}
+    if(!v){fpath_brit=null;} return this;
+  }
   
   public LoadConfig setFilepath_GWAD(String fp){
-    if(fp!=null){fpath_gwad=(fp.equals("none")) ? null : fp;}
-    return this;
+    if(fp!=null){fpath_gwad=(fp.equals("none")) ? null : fp;} return this;
   }
 
   /*----------------------------------------------------------------------------
@@ -98,7 +99,11 @@ public class LoadConfig {
     if(fpath_iwad==null&&fpath_gwad==null){return ret;}
     //> one or both of them exist ⮕ prefix filespec
     ret += " -file";
-    if(fpath_wad!=null){ret+=" "+fpath_wad; if(fpath_deh!=null){ret+=" "+fpath_deh;}}
+    if(fpath_wad!=null){
+      ret+=" "+fpath_wad;
+      if(fpath_deh!=null){ret+=" "+fpath_deh;}
+      if(fpath_bex!=null){ret+=" "+fpath_bex;}
+    }
     if(fpath_brit!=null){ret+=" "+fpath_brit;}    
     if(fpath_gwad!=null){ret+=" "+fpath_gwad;}
     return ret;
@@ -123,12 +128,13 @@ public class LoadConfig {
 
   public String toString(){
     return 
-      propToStr("Config Name/ID ---------->",  value) +
+      propToStr("Config Name/ID ---------->", value) +
       propToStr("Config Label ------------>", label) +    
-      propToStr("GZDoom App Filepath ----->",  fpath_gzd) +
+      propToStr("GZDoom App Filepath ----->", fpath_gzd) +
       propToStr("iWAD Filepath ----------->", fpath_iwad) +
-      propToStr("DeHackEd Filepath ------->",  fpath_deh) +
-      propToStr("Subject WAD Filepath----->",  fpath_wad) +
+      propToStr("DeHackEd Filepath ------->", fpath_deh) +      
+      propToStr("BoomExDeh Filepath ------>", fpath_bex) +
+      propToStr("Subject WAD Filepath----->", fpath_wad) +
       propToStr("Brightmaps PK3 Filepath ->", fpath_brit) +    
       propToStr("Gameplay WAD Filepath --->", fpath_gwad) +
       propToStr("Resultant CLI Command --->", toLaunchCommand());

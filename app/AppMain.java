@@ -8,7 +8,7 @@ import java.io.File;
 public class AppMain extends PApplet {
 
   public static int CANVAS_WIDE = 1280;
-  public static int CANVAS_TALL = 640;
+  public static int CANVAS_TALL = 768;
   public static int CANVAS_WIDH = CANVAS_WIDE/2;
   public static int CANVAS_TALH = CANVAS_TALL/2;
 

@@ -8,8 +8,10 @@ public enum EResPath {
   ASSETDIR("assets"),
   /** Filename of <code>JSON</code> containing required path info. */
   SRCPATHS("source_paths.json"),
-  /** Filename of app text font  (i.e. within {@link #ASSETDIR}). */
+  /** Filename of app text font (i.e. within {@link #ASSETDIR}). */
   TXTFONT("space-grotesk.vlw"),
+  /** Filename of app glyph font (i.e. within {@link #ASSETDIR}). */
+  SYMFONT("font_awesome_48.vlw"),
   /** Filename of app logo image (i.e. within {@link #ASSETDIR}). */
   APPLOGO("appname_logo.png"),
   /** Filename of app icon image (i.e. within {@link #ASSETDIR}). */
@@ -41,7 +43,9 @@ public enum EResPath {
   /** <code>iWAD</code>s dirpath. */  
   DP_IWADS, 
   /** Gameplay <code>WAD/PK3</code> filepath. */
-  FP_GPLAY;
+  FP_GPLAY,
+
+  STUB; //> exists only for semicolon, lol ;-)
 
   private String sPath;
   EResPath(){sPath=null;}

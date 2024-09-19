@@ -33,8 +33,8 @@ public class AppUtils {
   public HashMap<EResPath,String> pathdefs;
   public int FILL_BG;
 
-  public PFont LABELFONT;
-  public PFont GLYPHFONT;
+  public PFont TXTFONT;
+  public PFont SYMFONT;
   public PImage APPLOGO;
   public PImage APPICON;
 
@@ -57,16 +57,16 @@ public class AppUtils {
   
   private void loadAssets(){
     FILL_BG = app.color(255);
-    LABELFONT = app.loadFont(AppMain.fullpathOf(EResPath.TXTFONT));
-    GLYPHFONT = LABELFONT;
-    APPLOGO   = app.loadImage(AppMain.fullpathOf(EResPath.APPLOGO));
-    APPICON   = app.loadImage(AppMain.fullpathOf(EResPath.APPICON));    
+    TXTFONT = app.loadFont(AppMain.fullpathOf(EResPath.TXTFONT));
+    SYMFONT = app.loadFont(AppMain.fullpathOf(EResPath.SYMFONT));
+    APPLOGO = app.loadImage(AppMain.fullpathOf(EResPath.APPLOGO));
+    APPICON = app.loadImage(AppMain.fullpathOf(EResPath.APPICON));    
   }
 
   /** @implNote per usual... <b>ORDER COUNTS!</b> */
   public void render(){
     app.background(FILL_BG);
-    app.image(APPLOGO, 32, 32);
+    app.image(APPLOGO, 8, 64,512*1.5f,64*1.5f);
   }
 
   /*============================================================================

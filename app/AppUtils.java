@@ -100,11 +100,6 @@ public class AppUtils {
     pathdefs.put(EResPath.FP_DOOM2,  filepathOf(EResPath.DP_IWADS, EResPath.FN_DOOM2));
     pathdefs.put(EResPath.FP_PLUT,   filepathOf(EResPath.DP_IWADS, EResPath.FN_PLUT));
     pathdefs.put(EResPath.FP_TNT,    filepathOf(EResPath.DP_IWADS, EResPath.FN_TNT));
-
-    System.out.println(getFilepath(EResPath.FP_DOOM));
-    System.out.println(getFilepath(EResPath.FP_DOOM2));
-    System.out.println(getFilepath(EResPath.FP_PLUT));
-    System.out.println(getFilepath(EResPath.FP_TNT));    
   }
 
   String getFilenameFromDir(String dir){

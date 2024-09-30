@@ -54,18 +54,26 @@ public class AppGUI {
       appUtil,vec(SELPANE_XOFF,SELPANE_YOFF), vec(SELPANE_WIDE,SELPANE_TALL)
     );
 
-    UIDropdown.create(
-      uim, box(vec(DDOWN_XOFF,DDOWN_YOFF), vec(DDOWN_WIDE, DDOWN_TALL))
-    )
-    .addOptions(appUtil.getDropdownPayload())
-    .bindAction(new WADSelectAction(appUtil));
 
-    UIConfirm.create(
+
+    UIConfirm cfirm = UIConfirm.create(
       uim,
       box(vec(SELPANE_XOFF,SELPANE_YOFF+SELPANE_TALL+32), vec(SELPANE_WIDE,48)),
       new LaunchButtonAction(appUtil)
     )
-    .setButtonLabels(LCH_BTN_INIT, LCH_BTN_WARN, LCH_BTN_DONE);
+    .setButtonLabelsΘ(LCH_BTN_INIT, LCH_BTN_WARN, LCH_BTN_DONE)
+    .setDisabledΘ(true)
+    .castTo(UIConfirm.class)
+    ;
+
+
+    UIDropdown.create(
+      uim, box(vec(DDOWN_XOFF,DDOWN_YOFF), vec(DDOWN_WIDE, DDOWN_TALL))
+    )
+    .addOptions(appUtil.getDropdownPayload())
+    .bindAction(new WADSelectAction(appUtil,cfirm));
+
+
 
     UIConfirm.create(
       uim, 
@@ -118,10 +126,14 @@ class LaunchButtonAction implements IConfirmAction {
 
 
 class WADSelectAction implements ISelectAction {
-  AppUtils appUtils;
-  public WADSelectAction(AppUtils iAppUtils){appUtils = iAppUtils;}
+  AppUtils  appUtils;
+  UIConfirm launchBtn;
+  public WADSelectAction(AppUtils in_appUtils, UIConfirm in_launchBtn){
+    appUtils  = in_appUtils;
+    launchBtn = in_launchBtn;
+  }
   public void OnSelection(String wadID) {
-    System.err.println(wadID);
+    if(launchBtn.isDisabledState()){launchBtn.toggleDisabled();}
     appUtils.onSelectWAD(wadID);}
 }
 

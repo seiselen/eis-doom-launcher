@@ -43,8 +43,7 @@ public class AppGUI {
 
   public AppGUI(AppUtils iAppUtils){
     appUtil = iAppUtils;
-    uim = new UIManager(appUtil.app)
-    .injectFonts(appUtil.TXTFONT, appUtil.SYMFONT);
+    uim = new UIManager(appUtil.app);
     init();
   }
 
@@ -67,11 +66,11 @@ public class AppGUI {
     ;
 
 
-    UIDropdown.create(
-      uim, box(vec(DDOWN_XOFF,DDOWN_YOFF), vec(DDOWN_WIDE, DDOWN_TALL))
-    )
+    UIDropdown.create(uim, box(vec(DDOWN_XOFF,DDOWN_YOFF), vec(DDOWN_WIDE, DDOWN_TALL)))
     .addOptions(appUtil.getDropdownPayload())
-    .bindAction(new WADSelectAction(appUtil,cfirm));
+    .bindAction(new WADSelectAction(appUtil,cfirm))
+    .setStyleProp("strk_enabled", Integer.class, appUtil.app.color(0,64,160))
+    ;
 
 
 

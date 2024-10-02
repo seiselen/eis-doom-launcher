@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.File;
 import java.util.ArrayList;
 
+import PrEis.gui.UIObject;
 import PrEis.utils.Cons;
 import PrEis.utils.FileSysUtils;
 import PrEis.utils.FormatUtils;
@@ -59,6 +60,7 @@ public class AppUtils {
     FILL_BG = app.color(255);
     TXTFONT = app.loadFont(AppMain.fullpathOf(EResPath.TXTFONT));
     SYMFONT = app.loadFont(AppMain.fullpathOf(EResPath.SYMFONT));
+    UIObject.injectFonts(TXTFONT, SYMFONT);
     APPLOGO = app.loadImage(AppMain.fullpathOf(EResPath.APPLOGO));
     APPICON = app.loadImage(AppMain.fullpathOf(EResPath.APPICON));    
   }

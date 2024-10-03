@@ -1,5 +1,6 @@
 package app;
 import PrEis.utils.FileSysUtils;
+import PrEis.utils.JAResourceUtil;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
 
@@ -26,6 +27,7 @@ public class AppMain extends PApplet {
   
   public void setup(){
     initAssetPath();
+    JAResourceUtil.app = this;
     autils = new AppUtils(this);
     agui = new AppGUI(autils);
   }

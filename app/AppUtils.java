@@ -12,6 +12,8 @@ import PrEis.gui.UIObject;
 import PrEis.utils.Cons;
 import PrEis.utils.FileSysUtils;
 import PrEis.utils.FormatUtils;
+import PrEis.utils.JAResourceUtil;
+import PrEis.utils.PrEisRes;
 import PrEis.utils.StringUtils;
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -42,6 +44,8 @@ public class AppUtils {
   HashMap<String,LoadConfig> wadCfigs;
   LoadConfig curCfig;
 
+  
+
   /** Public for max exposability to consumers of this 'singleton' instance. */
   public PApplet app;
 
@@ -53,22 +57,23 @@ public class AppUtils {
     loadAndInitOptions();
     loadAssets();
     app.getSurface().setIcon(APPICON);
+    app.getSurface().setTitle("EisDoomLauncher"); 
   }
 
   
   private void loadAssets(){
-    FILL_BG = app.color(255);
-    TXTFONT = app.loadFont(AppMain.fullpathOf(EResPath.TXTFONT));
-    SYMFONT = app.loadFont(AppMain.fullpathOf(EResPath.SYMFONT));
-    UIObject.injectFonts(TXTFONT, SYMFONT);
-    APPLOGO = app.loadImage(AppMain.fullpathOf(EResPath.APPLOGO));
+    FILL_BG = app.color(0,32,64);
+    UIObject.textFont = JAResourceUtil.getFontFromJAR(PrEisRes.TXT_FONT);
+    UIObject.symbFont = JAResourceUtil.getFontFromJAR(PrEisRes.SYM_FONT);
+    UIObject.monoFont = JAResourceUtil.getFontFromJAR(PrEisRes.MON_FONT);
+
     APPICON = app.loadImage(AppMain.fullpathOf(EResPath.APPICON));    
   }
 
   /** @implNote per usual... <b>ORDER COUNTS!</b> */
   public void render(){
     app.background(FILL_BG);
-    app.image(APPLOGO, 8, 64,512*1.5f,64*1.5f);
+
   }
 
   /*============================================================================

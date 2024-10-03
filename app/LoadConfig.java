@@ -6,6 +6,20 @@ import PrEis.utils.StringUtils;
 /** Encompasses all files that can be specified for launch via GZDoom CLI. */
 public class LoadConfig {
 
+  /** 
+   * Bound to <code>UIToggle</code> s.t. if set <code>true</code>: gameplay WAD
+   * will be ignored (i.e. if/as specified by current config selection).
+   */
+  public static boolean DISABLE_GPLAY_OVERRIDE = false;
+  /** 
+   * Bound to <code>UIToggle</code> s.t. if set <code>true</code>: 'standard'
+   * GZDoom brightmaps <code>PK3</code> will be loaded.
+   * @implNote <b>NOTE:</b> The current behavior is that this <b>OVERRIDES</b>
+   * any existing brightmap spec! Ergo if a config has one, and it aint working:
+   * this is likely why (quick refactor if needed to fix, but #yolo and #KISS).
+   */
+  public static boolean USE_GZDOOM_STD_BRIGHTS = false;
+
   AppUtils appUtils;
 
   /** Config Name/ID */
@@ -104,19 +118,17 @@ public class LoadConfig {
       if(fpath_deh!=null){ret+=" "+fpath_deh;}
       if(fpath_bex!=null){ret+=" "+fpath_bex;}
     }
-    if(fpath_brit!=null){ret+=" "+fpath_brit;}    
-    if(fpath_gwad!=null){ret+=" "+fpath_gwad;}
+
+    if(USE_GZDOOM_STD_BRIGHTS){ret+=" "+appUtils.getFilepath(EResPath.FP_BRIGHT);}
+    else if(fpath_brit!=null){ret+=" "+fpath_brit;}
+    
+    if(fpath_gwad!=null && !DISABLE_GPLAY_OVERRIDE){ret+=" "+fpath_gwad;}
     return ret;
   }
   
   public String toLaunchCommand(){
     return fpath_gzd+" -iwad "+fpath_iwad+fileSubCommand();
   }
-
-  public static String configToLaunchArgs(String gzdoomFPATH, String iwadFPATH, String wadFPATH, String eisequipFPATH){
-    return gzdoomFPATH+" -iwad "+iwadFPATH+" -file "+wadFPATH+" "+eisequipFPATH;
-  }
-  
 
   /*----------------------------------------------------------------------------
   |> TOSTRING/TOCONSOLE FUNCTIONS

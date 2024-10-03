@@ -1,6 +1,6 @@
 # EisDoomLauncher
 
-<img src="build/assets/appname_logo.png" width=256px>
+<img src="build/assets/app_logo.png" width=512px>
 
 `EisDoomLauncher` : **GZDoom CLI Launch Util** powered by the **PrEIS** `JAR` Library
 

@@ -1,5 +1,5 @@
 package app;
-import PrEis.utils.Pgfx;
+import PrEis.gui.UIObject;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -46,7 +46,8 @@ public class QADSelectionPane {
 
   public void render(){
     app.strokeWeight(2);
-    Pgfx.strokenofill(app,0,0,128);
+    app.stroke(224,240,255);
+    app.fill(0,16,48);
     app.rectMode(PApplet.CORNER);
     app.rect(pos.x,pos.y,dim.x,dim.y);
 
@@ -57,7 +58,8 @@ public class QADSelectionPane {
     xOff=8;
     xOff2 = dim.x-(xOff*2);
     yOff=32;
-    app.fill(0);
+    app.textFont(UIObject.textFont);
+    app.fill(224,240,255);
     app.textAlign(PApplet.LEFT,PApplet.BASELINE);
     app.textSize(32);
     app.text("CURRENT SELECTION",xOff,yOff);
@@ -104,7 +106,9 @@ public class QADSelectionPane {
     if(cc==null){return;}
     xOff=32;
     yOff+=16;
-    app.fill(0,160,0);
+
+    app.textFont(UIObject.monoFont);
+    app.fill(0,255,0);
     app.textSize(14);    
     app.text(cc.toLaunchCommand(), xOff,yOff,dim.x-24,128);
   }

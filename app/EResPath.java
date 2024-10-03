@@ -8,12 +8,8 @@ public enum EResPath {
   ASSETDIR("assets"),
   /** Filename of <code>JSON</code> containing required path info. */
   SRCPATHS("source_paths.json"),
-  /** Filename of app text font (i.e. within {@link #ASSETDIR}). */
-  TXTFONT("space-grotesk.vlw"),
-  /** Filename of app glyph font (i.e. within {@link #ASSETDIR}). */
-  SYMFONT("font_awesome_48.vlw"),
   /** Filename of app logo image (i.e. within {@link #ASSETDIR}). */
-  APPLOGO("app_logo.png"),
+  APPLOGO("app_logo_2.png"),
   /** Filename of app icon image (i.e. within {@link #ASSETDIR}). */
   APPICON("app_icon.png"),
 

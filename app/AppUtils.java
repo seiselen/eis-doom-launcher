@@ -34,7 +34,6 @@ public class AppUtils {
 
 
   public HashMap<EResPath,String> pathdefs;
-  public int FILL_BG;
 
   public PFont TXTFONT;
   public PFont SYMFONT;
@@ -42,6 +41,8 @@ public class AppUtils {
   public PImage APPICON;
 
   HashMap<String,LoadConfig> wadCfigs;
+  
+  
   LoadConfig curCfig;
 
   
@@ -62,7 +63,6 @@ public class AppUtils {
 
   
   private void loadAssets(){
-    FILL_BG = app.color(0,32,64);
     UIObject.textFont = JAResourceUtil.getFontFromJAR(PrEisRes.TXT_FONT);
     UIObject.symbFont = JAResourceUtil.getFontFromJAR(PrEisRes.SYM_FONT);
     UIObject.monoFont = JAResourceUtil.getFontFromJAR(PrEisRes.MON_FONT);
@@ -70,10 +70,20 @@ public class AppUtils {
     APPICON = app.loadImage(AppMain.fullpathOf(EResPath.APPICON));    
   }
 
-  /** @implNote per usual... <b>ORDER COUNTS!</b> */
-  public void render(){
-    app.background(FILL_BG);
+  /*============================================================================
+  |>>> Getters
+  +===========================================================================*/
 
+  public LoadConfig getCurConfig(){
+    return curCfig;
+  }
+
+  public boolean hasCurConfig(){
+    return curCfig!=null;
+  }
+  
+  public String getCurConfigProp(ConfigProp prop){
+    if(hasCurConfig()){return curCfig.getProp(prop);} return LoadConfig.NA;
   }
 
   /*============================================================================

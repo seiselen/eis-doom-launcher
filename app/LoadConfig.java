@@ -1,10 +1,12 @@
 package app;
 import PrEis.utils.FileSysUtils;
-import PrEis.utils.FormatUtils;
 import PrEis.utils.StringUtils;
 
 /** Encompasses all files that can be specified for launch via GZDoom CLI. */
 public class LoadConfig {
+
+  /** <b>Not Applicable</b> i.e. null */
+  public static final String NA = "-(N/A)-";
 
   /** 
    * Bound to <code>UIToggle</code> s.t. if set <code>true</code>: gameplay WAD
@@ -138,6 +140,22 @@ public class LoadConfig {
     return new String[]{value, label};
   }
 
+  /** Realized for config info pane getters -VS- expense of Java Reflection. */
+  public String getProp(ConfigProp prop){
+    switch (prop) {
+      case VALUE      : return StringUtils.strValElse(value,NA);
+      case LABEL      : return StringUtils.strValElse(label,NA);
+      case FPATH_GZD  : return StringUtils.strValElse(fpath_gzd,NA);
+      case FPATH_IWAD : return StringUtils.strValElse(fpath_iwad,NA);
+      case FPATH_DEH  : return StringUtils.strValElse((fpath_deh==null)?fpath_bex:fpath_deh,NA);     
+      case FPATH_WAD  : return StringUtils.strValElse(fpath_wad,NA);
+      case FPATH_BRIT : return StringUtils.strValElse(fpath_brit,NA);
+      case FPATH_GWAD : return StringUtils.strValElse(fpath_gwad,NA);
+      case LAUNCH_CMD : return StringUtils.strValElse(toLaunchCommand(), NA);
+      default         : return null;
+    }
+  }
+
   public String toString(){
     return 
       propToStr("Config Name/ID ---------->", value) +
@@ -153,7 +171,7 @@ public class LoadConfig {
   }
 
   private String propToStr(String pfix, String prop){
-    return pfix+" "+StringUtils.wrapWith('[', FormatUtils.strValElseNone(prop))+" \n";
+    return pfix+" "+StringUtils.wrapWith('[', StringUtils.strValElse(prop,NA))+" \n";
   }
 
   public void toConsole(){

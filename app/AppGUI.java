@@ -37,8 +37,8 @@ class ToggleGModAction implements IToggleCallback {
 public class AppGUI {
 
   int SELPANE_XOFF    = 16;
-  int SELPANE_YOFF    = 96;
-  int SELPANE_TALL    = 400;
+  int SELPANE_YOFF    = 80;
+  int SELPANE_TALL    = 448;
   int SELPANE_WIDE    = 800;
 
   int DDOWN_WIDE      = 400;
@@ -55,16 +55,12 @@ public class AppGUI {
   private static final String LCH_BTN_WARN = "CLICK AGAIN TO CONFIRM + LAUNCH";
   private static final String LCH_BTN_DONE = "GZDOOM CLI LAUNCHED WITH CONFIG";
 
-
   private static final String TOG_BTN_BRIT = "If toggled on: the GZDoom brightmaps PK3 file will be loaded.";
   private static final String TOG_BTN_GMOD = "If toggled on: the specified gameplay mod will NOT be loaded.";
   
-
   AppUtils appUtil;
   UIManager uim;
   IntDict  glyphDict;
-
-  QADSelectionPane shittyPane;
 
   public AppGUI(AppUtils iAppUtils){
     appUtil = iAppUtils;
@@ -85,6 +81,7 @@ public class AppGUI {
 
   public void init(){
 
+    // shittyPane = new QADSelectionPane(appUtil, new PVector(SELPANE_XOFF,SELPANE_YOFF), new PVector(SELPANE_WIDE,SELPANE_TALL));
 
     uim.bindUiObject(
       new UIAppBar(appUtil.app, WidgetType.NA)
@@ -96,11 +93,11 @@ public class AppGUI {
     );
 
 
-
-    shittyPane = new QADSelectionPane(
-      appUtil, new PVector(SELPANE_XOFF,SELPANE_YOFF), new PVector(SELPANE_WIDE,SELPANE_TALL)
-    );
-
+    uim.bindUiObject(new UILauncherInfoPane(
+      appUtil.app,
+      new BBox(SELPANE_XOFF, SELPANE_YOFF, SELPANE_WIDE, SELPANE_TALL),
+      appUtil
+    ));
 
 
     UIContainer.create(
@@ -153,16 +150,10 @@ public class AppGUI {
       .setStyleProp("txt_offset", PVector.class, new PVector(1,3))
       .setStyleProp("txt_size", Integer.class, 40)
       
-
-
-
-
     )
-    .setStyleProp("fill", Integer.class, appUtil.app.color(0,16,48))
+    .setStyleProp("fill", Integer.class, appUtil.app.color(0,128))
     .setStyleProp("strk_enabled", Integer.class, appUtil.app.color(224,240,255))    
     ;
-
-    System.err.println("WTF ( "+(int)glyphChar("gZoomIn").charAt(0)+" )");
 
 
     UIConfirm cfirm = UIConfirm.create(
@@ -195,14 +186,23 @@ public class AppGUI {
     .setStyleProp("strk_transp", Integer.class, appUtil.app.color(224,240,255))
     .setStyleProp("fill_transp", Integer.class, appUtil.app.color(208,224,255))
     ;
+
+
+
+
+
   }
 
 
 
   public void onMousePressed(){uim.onMousePressed();}
   public void onMouseWheel(int v){uim.onMouseWheel(v);}
-  public void update(){uim.update(); shittyPane.update();}
-  public void render(){uim.render(); shittyPane.render();}
+  public void update(){
+    uim.update();
+  }
+  public void render(){
+    uim.render();
+  }
   
 }
 

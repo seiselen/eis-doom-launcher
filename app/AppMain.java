@@ -14,8 +14,9 @@ public class AppMain extends PApplet {
   public static int CANVAS_TALH = CANVAS_TALL/2;
 
   public static String assetPath;  
-  private AppUtils autils;
-  private AppGUI agui;
+  public AppUtils autils;
+  public AppGUI agui;
+  public int FILL_BG;
 
   public static void main(String[] args) {
     PApplet.main("app.AppMain"); 
@@ -30,13 +31,14 @@ public class AppMain extends PApplet {
     JAResourceUtil.app = this;
     autils = new AppUtils(this);
     agui = new AppGUI(autils);
+    FILL_BG = color(0,16,48);
   }
 
   public void draw(){
     //-[UPDATE CALLS]----------#
+    background(FILL_BG);
     agui.update();
     //-[RENDER CALLS]----------#
-    autils.render();
     agui.render();
   }
 

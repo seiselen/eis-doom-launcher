@@ -1,6 +1,7 @@
 package app;
 import java.util.HashMap;
 import java.util.Arrays;
+import java.util.Collections;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.FilenameFilter;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 import PrEis.gui.UIObject;
 import PrEis.utils.Cons;
+import PrEis.utils.DataStructUtils;
 import PrEis.utils.FileSysUtils;
 import PrEis.utils.FormatUtils;
 import PrEis.utils.JAResourceUtil;
@@ -28,7 +30,7 @@ public class AppUtils {
    * the config command; instead only printing it to console. Make sure this is
    * set to <code>false</code> before building a release <i>(duh!)</i>
    */
-  private boolean DEBUG_NO_LAUNCH = true;
+  private boolean DEBUG_NO_LAUNCH = false;
 
   /** Used by launch Confirm Button to cancel/reset on debug no launch event. */
   public boolean getDebugNoLaunch(){return DEBUG_NO_LAUNCH;}
@@ -68,7 +70,7 @@ public class AppUtils {
     UIObject.symbFont = JAResourceUtil.getFontFromJAR(PrEisRes.SYM_FONT);
     UIObject.monoFont = JAResourceUtil.getFontFromJAR(PrEisRes.MON_FONT);
 
-    APPICON = app.loadImage(AppMain.fullpathOf(EResPath.APPICON));    
+    APPICON = app.loadImage(AppMain.fullPathInAssetDir(EResPath.APPICON));    
   }
 
   /*============================================================================
@@ -86,6 +88,17 @@ public class AppUtils {
   public String getCurConfigProp(ConfigProp prop){
     if(hasCurConfig()){return curCfig.getProp(prop);} return LoadConfig.NA;
   }
+
+  /*============================================================================
+  |>>> Setters
+  +===========================================================================*/
+
+  public void setCurConfig(LoadConfig inConfig){
+    if(inConfig!=null){curCfig=inConfig;}
+  }
+
+
+
 
   /*============================================================================
   |>>> Global Path Utils
@@ -107,7 +120,7 @@ public class AppUtils {
    */
   private void initPaths(){
     JSONObject srcDirsJSON = null;
-    try {srcDirsJSON = app.loadJSONObject(AppMain.fullpathOf(EResPath.SRCPATHS));} 
+    try {srcDirsJSON = app.loadJSONObject(AppMain.fullPathInAssetDir(EResPath.SRCPATHS));} 
     catch (Exception e){Cons.err(StringUtils.concatAsSSV("File",EResPath.SRCPATHS.get(),"failed to load!")); app.exit(); return;}
     pathdefs.put(EResPath.FP_GZDOOM, srcDirsJSON.getString(EResPath.FP_GZDOOM.get()));
     pathdefs.put(EResPath.DP_WADS,   srcDirsJSON.getString(EResPath.DP_WADS.get()));
@@ -146,23 +159,40 @@ public class AppUtils {
   }
 
 
+  /*============================================================================
+  |>>> APP SESSION LOG UTILS
+  +===========================================================================*/
+
+  private JSONObject loadAppSessionLog(){
+    if(new File(AppMain.fullPathInRootDir(EResPath.APP_LOG)).exists()){
+      return app.loadJSONObject(AppMain.fullPathInRootDir(EResPath.APP_LOG));
+    }
+    else {
+      System.out.println("Cannot find app log file in app root dir");
+      return null;
+    }
+  }
+
+  public LoadConfig getPrevConfig(){
+    JSONObject appLog = loadAppSessionLog();
+    if(appLog==null){return null;}
+    if(appLog.keys().size()<1){return null;}
+    String[] keys = DataStructUtils.keyArrayOfJSONObj(appLog);
+    java.util.Arrays.sort(keys, Collections.reverseOrder());
+    return ConfigBuilder.parseAppLogConfig(this, appLog.getJSONObject(keys[0]));
+  }
+
+
   private void setAppSessionLog(){
-    JSONObject appLog = null;
-    try {
-      appLog = app.loadJSONObject(AppMain.fullpathOf(EResPath.APP_LOG));
-    }
-    catch (Exception e){
-      Cons.err(StringUtils.concatAsSSV("File",EResPath.APP_LOG.get(),"failed to load!"));
-      app.exit();
-      return;
-    }
+    JSONObject appLog = loadAppSessionLog();
+    if(appLog==null){appLog = new JSONObject();}
     
     JSONObject sessObj = new JSONObject();
     String[][] sessInfo = curCfig.toKVStrArr();
     sessObj.setString("date",QueryUtils.dateTimeToString());
     for(String[] datum : sessInfo){sessObj.setString(datum[0], datum[1]);}
     appLog.setJSONObject(QueryUtils.epochSecondToString(), sessObj);
-    app.saveJSONObject(appLog, AppMain.fullpathOf(EResPath.APP_LOG));
+    app.saveJSONObject(appLog, AppMain.fullPathInRootDir(EResPath.APP_LOG));
   }
 
 
@@ -182,30 +212,21 @@ public class AppUtils {
   public void onSelectWAD(String wadID){
     LoadConfig newCurConfig = wadCfigs.get(wadID);
     if(newCurConfig==null){Cons.warn("Cannot find `LoadConfig` of value ["+wadID+"]");}
-    else{curCfig = newCurConfig;}
+    else{setCurConfig(newCurConfig);}
   }
 
   private void loadAndInitOptions(){
     String [] wadNames = getMapsetWadDirNames(); 
     ArrayList <LoadConfig> lcArrList = new ArrayList<LoadConfig>();
     for (String n : wadNames){lcArrList.addAll(Arrays.asList(ConfigBuilder.build(this,n)));}
-    for(LoadConfig c : lcArrList){wadCfigs.put(c.cf_val, c);}
+    for(LoadConfig c : lcArrList){wadCfigs.put(c.cf_nam, c);}
   }
 
   @SuppressWarnings("deprecation") public void launchGZDoomWithCurConfig(){
-    String launchCMD = curCfig.toLaunchCommand();
-    if(DEBUG_NO_LAUNCH){
-      System.out.println(launchCMD);
-    }
-    else{
-      try{Runtime.getRuntime().exec(launchCMD);}
-      catch (IOException e){Cons.err(e.getMessage());}
-    }
+    String CLICMD = curCfig.toLaunchCommand();
     setAppSessionLog();
-    app.exit();
-    return;
+    if(DEBUG_NO_LAUNCH){System.out.println(CLICMD); return;}
+    else{try{Runtime.getRuntime().exec(CLICMD);} catch (IOException e){e.printStackTrace();}}
+    app.exit(); return;
   }
-
-
-
 }

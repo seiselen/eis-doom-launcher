@@ -25,27 +25,25 @@ public class LoadConfig {
   AppUtils appUtil;
 
   /** Config Name/ID */
-  String cf_val;
+  String cf_nam;
   /** Config Label */
   String cf_lbl;
   /** GZDoom app */
   String fp_gzd;
-  /** Internal WAD */
+  /** Internal <code>WAD</code> */
   String fp_iwad;
-  /** DeHackEd file */
+  /** DeHackEd <code>xor</code> BoomExDeh */
   String fp_deh;
-  /** BoomExDeh file */
-  String fp_bex;
-  /** Mapset WAD|PK3 */
+  /** Mapset <code>WAD|PK3</code> */
   String fp_wad;
-  /** Gameplay WAD|PK3 */
+  /** Gameplay <code>WAD|PK3</code> */
   String fp_gwad;
-  /** Brightmaps PK3 */
+  /** Brightmaps <code>PK3</code> */
   String fp_brit;
 
   public LoadConfig(AppUtils iAppUtils){
     appUtil = iAppUtils;
-    cf_val  = "";
+    cf_nam  = "";
     cf_lbl  = "";
     fp_gzd  = appUtil.getFilepath(EResPath.FP_GZDOOM);
     fp_iwad = appUtil.getFilepath(EResPath.FP_DOOM2);
@@ -59,7 +57,7 @@ public class LoadConfig {
 
   public LoadConfig setValΘ(String cname){setVal(cname); return this;}
   private void setVal(String iName){
-    if(iName!=null){cf_val = FileSysUtils.fnameFromFpath(iName,false);}
+    if(iName!=null){cf_nam = FileSysUtils.fnameFromFpath(iName,false);}
   }
 
   public LoadConfig setLblΘ(String clabl){setLbl(clabl); return this;}
@@ -67,14 +65,16 @@ public class LoadConfig {
     if(iLabl!=null){cf_lbl = StringUtils.valToSSVCapdWords(iLabl);}
   }
 
-  public LoadConfig setFPΘ(ConfigProp prop, String path){setFP(prop, path); return this;}
-  public void setFP(ConfigProp prop, String path){switch (prop){
-    case FP_GZD  : if(path!=null){fp_gzd=path;}  return;
-    case FP_IWAD : if(path!=null){fp_iwad=path;} return;
-    case FP_DEH  : if(path!=null){fp_deh=path;}  return;
-    case FP_WAD  : if(path!=null){fp_wad=path;}  return;
-    case FP_BRIT : if(path==null){fp_brit=null;} return;
-    case FP_GWAD : if(path!=null){fp_gwad=(path.equals("none")) ? null : path;}; return;
+  public LoadConfig setPropΘ(ConfigProp prop, String path){setProp(prop, path); return this;}
+  public void setProp(ConfigProp prop, String val){switch (prop){
+    case CF_NAM  : if(val!=null){cf_nam=val;}  return;
+    case CF_LBL  : if(val!=null){cf_lbl=val;}  return;    
+    case FP_GZD  : if(val!=null){fp_gzd=val;}  return;
+    case FP_IWAD : if(val!=null){fp_iwad=val;} return;
+    case FP_DEH  : if(val!=null){fp_deh=val;}  return;
+    case FP_WAD  : if(val!=null){fp_wad=val;}  return;
+    case FP_BRIT : if(val==null){fp_brit=null;} return;
+    case FP_GWAD : if(val!=null){fp_gwad=(val.equals("none")) ? null : val;}; return;
     default      : return;
   }}
 
@@ -82,9 +82,6 @@ public class LoadConfig {
   /*----------------------------------------------------------------------------
   |> GETTERS
   +---------------------------------------------------------------------------*/
-
-  private boolean hasDehPath(){return fp_deh!=null || fp_bex!=null;}
-  private String getDehPath(){return (fp_deh==null) ? fp_bex : fp_deh;}
 
   private boolean hasBritPath(){return USE_GZDOOM_STD_BRIGHTS || fp_brit!=null;}
   private String  getBritPath(){return (USE_GZDOOM_STD_BRIGHTS) ? appUtil.getFilepath(EResPath.FP_BRIGHT) : fp_brit;}
@@ -97,23 +94,23 @@ public class LoadConfig {
     //> one or both of them exist ⮕ prefix filespec
     ret += " -file";
     if(fp_wad!=null){ret+=" "+fp_wad;}
-    if(hasDehPath()){ret+=" "+getDehPath();}
+    if(fp_deh!=null){ret+=" "+fp_deh;}
     if(hasBritPath()){ret+=" "+getBritPath();}   
     if(fp_gwad!=null && !DISABLE_GPLAY_OVERRIDE){ret+=" "+fp_gwad;}
     return ret;
   }
 
   public String[] getDropdownValAndLbl(){
-    return new String[]{cf_val, cf_lbl};
+    return new String[]{cf_nam, cf_lbl};
   }
 
   /** Realized for config info pane getters -VS- expense of Java Reflection. */
   public String getProp(ConfigProp prop){switch (prop) {
-    case CF_VAL  : return StringUtils.strValElse(cf_val,NA);
+    case CF_NAM  : return StringUtils.strValElse(cf_nam,NA);
     case CF_LBL  : return StringUtils.strValElse(cf_lbl,NA);
     case FP_GZD  : return StringUtils.strValElse(fp_gzd,NA);
     case FP_IWAD : return StringUtils.strValElse(fp_iwad,NA);
-    case FP_DEH  : return StringUtils.strValElse(getDehPath(),NA);
+    case FP_DEH  : return StringUtils.strValElse(fp_deh,NA);
     case FP_WAD  : return StringUtils.strValElse(fp_wad,NA);
     case FP_BRIT : return StringUtils.strValElse(fp_brit,NA);
     case FP_GWAD : return StringUtils.strValElse(fp_gwad,NA);
@@ -131,29 +128,28 @@ public class LoadConfig {
 
   public String[][] toKVStrArr(){
     return new String[][]{
-      new String[]{"CF_VAL",  getProp(ConfigProp.CF_VAL) },
-      new String[]{"CF_LBL",  getProp(ConfigProp.CF_LBL) },
-      new String[]{"FP_GZD",  getProp(ConfigProp.FP_GZD) },
-      new String[]{"FP_IWAD", getProp(ConfigProp.FP_IWAD)},
-      new String[]{"FP_DEH",  getProp(ConfigProp.FP_DEH) },
-      new String[]{"FP_WAD",  getProp(ConfigProp.FP_WAD) },
-      new String[]{"FP_BRIT", getProp(ConfigProp.FP_BRIT)},
-      new String[]{"FP_GWAD", getProp(ConfigProp.FP_GWAD)},
-      new String[]{"CLI_CMD", getProp(ConfigProp.CLI_CMD)}
+      new String[]{ConfigProp.CF_NAM.toString(),  getProp(ConfigProp.CF_NAM )},
+      new String[]{ConfigProp.CF_LBL.toString(),  getProp(ConfigProp.CF_LBL )},
+      new String[]{ConfigProp.FP_GZD.toString(),  getProp(ConfigProp.FP_GZD )},
+      new String[]{ConfigProp.FP_IWAD.toString(), getProp(ConfigProp.FP_IWAD)},
+      new String[]{ConfigProp.FP_DEH.toString(),  getProp(ConfigProp.FP_DEH )},
+      new String[]{ConfigProp.FP_WAD.toString(),  getProp(ConfigProp.FP_WAD )},
+      new String[]{ConfigProp.FP_BRIT.toString(), getProp(ConfigProp.FP_BRIT)},
+      new String[]{ConfigProp.FP_GWAD.toString(), getProp(ConfigProp.FP_GWAD)},
+      new String[]{ConfigProp.CLI_CMD.toString(), getProp(ConfigProp.CLI_CMD)}
     };
   }
 
   public String toString(){return 
-    propToStr("Config Name/ID ---------->", cf_val) +
-    propToStr("Config Label ------------>", cf_lbl) +    
-    propToStr("GZDoom App Filepath ----->", fp_gzd) +
-    propToStr("iWAD Filepath ----------->", fp_iwad) +
-    propToStr("DeHackEd Filepath ------->", fp_deh) +      
-    propToStr("BoomExDeh Filepath ------>", fp_bex) +
-    propToStr("Subject WAD Filepath----->", fp_wad) +
-    propToStr("Brightmaps PK3 Filepath ->", fp_brit) +    
-    propToStr("Gameplay WAD Filepath --->", fp_gwad) +
-    propToStr("Resultant CLI Command --->", toLaunchCommand());
+    propToStr("Config Name/ID ----------->", cf_nam) +
+    propToStr("Config Label ------------->", cf_lbl) +    
+    propToStr("GZDoom App Filepath ------>", fp_gzd) +
+    propToStr("iWAD Filepath ------------>", fp_iwad) +
+    propToStr("DeHackEd/BoomEx Filepath ->", fp_deh) +      
+    propToStr("Subject WAD Filepath------>", fp_wad) +
+    propToStr("Brightmaps PK3 Filepath -->", fp_brit) +    
+    propToStr("Gameplay WAD Filepath ---->", fp_gwad) +
+    propToStr("Resultant CLI Command ---->", toLaunchCommand());
   }
 
   public void toConsole(){

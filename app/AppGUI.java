@@ -2,12 +2,14 @@ package app;
 
 import PrEis.gui.AppFont;
 import PrEis.gui.ConfirmState;
+import PrEis.gui.IActionCallback;
 import PrEis.gui.IConfirmAction;
 import PrEis.gui.ISelectAction;
 import PrEis.gui.IToggleCallback;
 import PrEis.gui.LabelType;
 import PrEis.gui.PosOri;
 import PrEis.gui.UIAppBar;
+import PrEis.gui.UIClick;
 import PrEis.gui.UIConfirm;
 import PrEis.gui.UIContainer;
 import PrEis.gui.UIDropdown;
@@ -81,17 +83,30 @@ public class AppGUI {
 
   public void init(){
 
-    // shittyPane = new QADSelectionPane(appUtil, new PVector(SELPANE_XOFF,SELPANE_YOFF), new PVector(SELPANE_WIDE,SELPANE_TALL));
-
     uim.bindUiObject(
       new UIAppBar(appUtil.app, WidgetType.NA)
       .bindAppLogoΘ(
-        appUtil.app.loadImage(AppMain.fullpathOf(EResPath.APPLOGO)),
+        appUtil.app.loadImage(AppMain.fullPathInAssetDir(EResPath.APPLOGO)),
         new PVector(600, 64)
       )
       .setStyleProp("fill", Integer.class, appUtil.app.color(32))
     );
 
+    UIClick.create(
+      uim,
+      new BBox(appUtil.app.width-480, 12, 288, 40),
+      "LOAD PREVIOUS SESSION",
+      AppFont.TEXT,
+      new LoadPrevCfigAction(appUtil)
+    )
+    .setStyleProp("strk_enabled", Integer.class, appUtil.app.color(255,255,0))    
+    .setStyleProp("fill", Integer.class, appUtil.app.color(96,64,0))
+    .setStyleProp("fill_hovered", Integer.class, appUtil.app.color (128,96,0))
+    .setStyleProp("fill_clicked", Integer.class, appUtil.app.color (160,128,0))
+    .setStyleProp("fill_disabled", Integer.class, appUtil.app.color(64,32,0))    
+    .setTitle("Loads config used in most recent launch.")
+    
+    ;
 
     uim.bindUiObject(new UILauncherInfoPane(
       appUtil.app,
@@ -259,4 +274,14 @@ class AppQuitAction implements IConfirmAction {
     case ONWARN: cs = ConfirmState.ONDONE; doAction(); return;
     default: return;
   }}
+}
+
+
+class LoadPrevCfigAction implements IActionCallback {
+  AppUtils au;  
+  public LoadPrevCfigAction(AppUtils in_au){au=in_au;}
+  public void action() {
+    LoadConfig cfig = au.getPrevConfig();
+    if(cfig!=null){au.setCurConfig(cfig);}
+  }
 }

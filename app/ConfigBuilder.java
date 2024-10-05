@@ -34,8 +34,8 @@ public class ConfigBuilder {
         new LoadConfig(au)
         .setValΘ(fname)
         .setLblΘ(dirName)
-        .setFPΘ(ConfigProp.FP_WAD, fname)
-        .setFPΘ(ConfigProp.FP_BRIT, null)
+        .setPropΘ(ConfigProp.FP_WAD, fname)
+        .setPropΘ(ConfigProp.FP_BRIT, null)
       );
     }
   
@@ -57,12 +57,12 @@ public class ConfigBuilder {
       return FormatUtils.arr1FromObj(new LoadConfig(au)
       .setValΘ(wadSpec[0])
       .setLblΘ(dirName)
-      .setFPΘ(ConfigProp.FP_WAD, wadSpec[0])
-      .setFPΘ(ConfigProp.FP_DEH, dehSpec)
-      .setFPΘ(ConfigProp.FP_DEH, bexSpec)
-      .setFPΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
-      .setFPΘ(ConfigProp.FP_BRIT, britspec)
-      .setFPΘ(ConfigProp.FP_GWAD, gwadspec));
+      .setPropΘ(ConfigProp.FP_WAD, wadSpec[0])
+      .setPropΘ(ConfigProp.FP_DEH, dehSpec)
+      .setPropΘ(ConfigProp.FP_DEH, bexSpec)
+      .setPropΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
+      .setPropΘ(ConfigProp.FP_BRIT, britspec)
+      .setPropΘ(ConfigProp.FP_GWAD, gwadspec));
     }
     else if(wadSpec.length>1){
       //> handles special `ALT_LEV_WAD` case s.t. both wad and level+wad are spec'd
@@ -71,19 +71,19 @@ public class ConfigBuilder {
           /* primary wad */  new LoadConfig(au)
           .setValΘ(wadSpec[0])
           .setLblΘ(dirName)
-          .setFPΘ(ConfigProp.FP_WAD, wadSpec[0])
-          .setFPΘ(ConfigProp.FP_DEH, dehSpec)
-          .setFPΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
-          .setFPΘ(ConfigProp.FP_BRIT, britspec)
-          .setFPΘ(ConfigProp.FP_GWAD, gwadspec),
+          .setPropΘ(ConfigProp.FP_WAD, wadSpec[0])
+          .setPropΘ(ConfigProp.FP_DEH, dehSpec)
+          .setPropΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
+          .setPropΘ(ConfigProp.FP_BRIT, britspec)
+          .setPropΘ(ConfigProp.FP_GWAD, gwadspec),
           /* spec-lev wad */ new LoadConfig(au)
           .setValΘ(wadSpec[1])
           .setLblΘ(dirName)
-          .setFPΘ(ConfigProp.FP_WAD, wadSpec[0]+" "+wadSpec[1])
-          .setFPΘ(ConfigProp.FP_DEH, dehSpec)
-          .setFPΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
-          .setFPΘ(ConfigProp.FP_BRIT, britspec)
-          .setFPΘ(ConfigProp.FP_GWAD, gwadspec)
+          .setPropΘ(ConfigProp.FP_WAD, wadSpec[0]+" "+wadSpec[1])
+          .setPropΘ(ConfigProp.FP_DEH, dehSpec)
+          .setPropΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
+          .setPropΘ(ConfigProp.FP_BRIT, britspec)
+          .setPropΘ(ConfigProp.FP_GWAD, gwadspec)
         };
       }
       //> handles multi-wad spec
@@ -93,11 +93,11 @@ public class ConfigBuilder {
           ret[i] = new LoadConfig(au)
           .setValΘ(wadSpec[i])
           .setLblΘ(dirName)
-          .setFPΘ(ConfigProp.FP_WAD, wadSpec[i])
-          .setFPΘ(ConfigProp.FP_DEH, dehSpec)
-          .setFPΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
-          .setFPΘ(ConfigProp.FP_BRIT, britspec)
-          .setFPΘ(ConfigProp.FP_GWAD, gwadspec);
+          .setPropΘ(ConfigProp.FP_WAD, wadSpec[i])
+          .setPropΘ(ConfigProp.FP_DEH, dehSpec)
+          .setPropΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
+          .setPropΘ(ConfigProp.FP_BRIT, britspec)
+          .setPropΘ(ConfigProp.FP_GWAD, gwadspec);
         }
         return ret;
       }
@@ -202,5 +202,33 @@ public class ConfigBuilder {
       return SpecFlag.ALT_LEV_WAD;
     }
     return null;
+  }
+
+  public static LoadConfig parseAppLogConfig(AppUtils au, JSONObject appLog){
+    LoadConfig cfig = new LoadConfig(au);
+    ConfigProp[] cfigProps = ConfigProp.toArray();
+    for(ConfigProp prop : cfigProps){
+      if(installAppLogDatum(au, appLog, cfig, prop)==false){
+        Cons.err("Something went wrong parsing app log config, printing status of reconstructed object");
+        cfig.toConsole();
+        return null;
+      }
+    }
+    return cfig;
+  }
+
+
+  private static boolean installAppLogDatum(AppUtils au, JSONObject appLog, LoadConfig cfig, ConfigProp prop){
+    String propName = prop.toString();
+    try {
+      String buffStr = appLog.getString(propName);
+      if(buffStr==null){return false;} //> app log entries should NEVER be null[ish]
+      if(buffStr.equals(LoadConfig.NA)){buffStr=null;}
+      cfig.setProp(prop, buffStr);
+      return true;
+    } catch (Exception e) {
+      Cons.err("Something went wrong parsing app log config datum '"+propName+"'");
+      return false;
+    }
   }
 }

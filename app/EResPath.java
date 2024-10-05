@@ -43,8 +43,12 @@ public enum EResPath {
   /** Gameplay <code>WAD/PK3</code> filepath. */
   FP_GPLAY,
 
-  STUB; //> exists only for semicolon, lol ;-)
+  /*=[STUB (exists only for semicolon, lol)]====================================
+  +---------------------------------------------------------------------------*/
+  STUB;
 
+  /*=[ENUM STATE/INIT/FUNC DEFS]================================================
+  +---------------------------------------------------------------------------*/
   private String sPath;
   EResPath(){sPath=null;}
   EResPath(String in_sPath){sPath = in_sPath;}

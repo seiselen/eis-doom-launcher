@@ -13,13 +13,15 @@ public class AppMain extends PApplet {
   public static int CANVAS_WIDH = CANVAS_WIDE/2;
   public static int CANVAS_TALH = CANVAS_TALL/2;
 
-  public static String assetPath;  
+  public static String assetPath;
+  public static String rootPath;  
   public AppUtils autils;
   public AppGUI agui;
   public int FILL_BG;
 
   public static void main(String[] args) {
     PApplet.main("app.AppMain"); 
+    System.out.println("\n \n"); //> corrects debug launch blurb lack of newline
   }
 
   public void settings(){
@@ -28,10 +30,12 @@ public class AppMain extends PApplet {
   
   public void setup(){
     initAssetPath();
+    initRootPath();
     JAResourceUtil.app = this;
     autils = new AppUtils(this);
     agui = new AppGUI(autils);
     FILL_BG = color(0,16,48);
+
   }
 
   public void draw(){
@@ -59,18 +63,32 @@ public class AppMain extends PApplet {
     String ad = EResPath.ASSETDIR.get();
     String bd = EResPath.BUILDIR.get();
 
-    //=[ 'PRODUCTION MODE' CASE (I.E. STANDALONE LAUNCHED BY USER) ]============
+    //> Existence of `root/assets` implies standalone mode
     f = new File(FileSysUtils.pathConcat(sketchPath(), ad));
     if (f.exists() && f.isDirectory()){AppMain.assetPath = f.getAbsolutePath();}
-    
-    //=[ 'DEVELOPMENT MODE' CASE (I.E. DEBUG LAUNCHED BY VSCODE) ]==============
+
+    //> Else existence of `root/build/assets` implies development mode
     f = new File(FileSysUtils.pathConcat(sketchPath(), bd, ad));
     if (f.exists() && f.isDirectory()){AppMain.assetPath = f.getAbsolutePath();}
   }
 
+  public void initRootPath(){
+    File f = new File(FileSysUtils.pathConcat(sketchPath(), EResPath.BUILDIR.get())); 
+    //> Existence of `root/build/` implies development mode
+    if (f.exists() && f.isDirectory()){AppMain.rootPath = f.getAbsolutePath();}
+    //> Else root is as `sketchPath` specifies
+    else{AppMain.rootPath = sketchPath();}
+  }
+
   /** Returns path concat of {@link #assetPath} with input subpath therefrom. */
-  public static String fullpathOf(EResPath sp){
+  public static String fullPathInAssetDir(EResPath sp){
     return FileSysUtils.pathConcat(AppMain.assetPath,sp.get());
   }
+
+  /** Returns path concat of {@link #rootPath} with input subpath therefrom. */
+  public static String fullPathInRootDir(EResPath sp){
+    return FileSysUtils.pathConcat(AppMain.rootPath,sp.get());
+  }
+
 
 }

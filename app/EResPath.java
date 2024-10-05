@@ -8,6 +8,8 @@ public enum EResPath {
   ASSETDIR("assets"),
   /** Filename of <code>JSON</code> containing required path info. */
   SRCPATHS("source_paths.json"),
+  /** Filename of <code>JSON</code> containing logs of prior sessions. */
+  APP_LOG("session_log.json"),
   /** Filename of app logo image (i.e. within {@link #ASSETDIR}). */
   APPLOGO("app_logo_2.png"),
   /** Filename of app icon image (i.e. within {@link #ASSETDIR}). */

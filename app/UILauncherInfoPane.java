@@ -31,13 +31,13 @@ class UILauncherInfoPane extends UIContainer {
 
     CurConfigUpdate   curTar;
     CurConfigUpdate[] targets = new CurConfigUpdate[]{
-      new CurConfigUpdate(aUtil, ConfigProp.LABEL,      "Config Name" ),
-      new CurConfigUpdate(aUtil, ConfigProp.FPATH_GZD,  "GZDoom Path" ),
-      new CurConfigUpdate(aUtil, ConfigProp.FPATH_IWAD, "iWAD Path"   ),
-      new CurConfigUpdate(aUtil, ConfigProp.FPATH_WAD,  "WAD Path(s)" ),
-      new CurConfigUpdate(aUtil, ConfigProp.FPATH_DEH,  "DEH/BEX Path"),
-      new CurConfigUpdate(aUtil, ConfigProp.FPATH_BRIT, "Brights Path"),
-      new CurConfigUpdate(aUtil, ConfigProp.FPATH_GWAD, "Gameplay Mod")
+      new CurConfigUpdate(aUtil, ConfigProp.CF_LBL,      "Config Name" ),
+      new CurConfigUpdate(aUtil, ConfigProp.FP_GZD,  "GZDoom Path" ),
+      new CurConfigUpdate(aUtil, ConfigProp.FP_IWAD, "iWAD Path"   ),
+      new CurConfigUpdate(aUtil, ConfigProp.FP_WAD,  "WAD Path(s)" ),
+      new CurConfigUpdate(aUtil, ConfigProp.FP_DEH,  "DEH/BEX Path"),
+      new CurConfigUpdate(aUtil, ConfigProp.FP_BRIT, "Brights Path"),
+      new CurConfigUpdate(aUtil, ConfigProp.FP_GWAD, "Gameplay Mod")
     };
 
     int bordCol = app.color(255,0);
@@ -79,7 +79,7 @@ class UILauncherInfoPane extends UIContainer {
 
     String pad = StringUtils.charTimesN('-',16);
 
-    curTar = new CurConfigUpdate(aUtil, ConfigProp.LAUNCH_CMD, pad+" FULL CLI LAUNCH COMMAND "+pad);
+    curTar = new CurConfigUpdate(aUtil, ConfigProp.CLI_CMD, pad+" FULL CLI LAUNCH COMMAND "+pad);
 
     addChild(
       UILabel.create(app, new BBox(xO, yO, 768, 24), curTar.tarLabl, AF, LT, null)

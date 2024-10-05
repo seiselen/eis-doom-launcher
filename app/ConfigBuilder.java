@@ -32,10 +32,10 @@ public class ConfigBuilder {
       String fname = au.getFilenameFromDir(dirPath);
       return FormatUtils.arr1FromObj(
         new LoadConfig(au)
-        .setVal(fname)
-        .setLbl(dirName)
-        .setFilepath_WAD(fname)
-        .setFilepath_BRIT(false)
+        .setValΘ(fname)
+        .setLblΘ(dirName)
+        .setFPΘ(ConfigProp.FP_WAD, fname)
+        .setFPΘ(ConfigProp.FP_BRIT, null)
       );
     }
   
@@ -48,42 +48,42 @@ public class ConfigBuilder {
     IwadType iwadSpec = loadinfo_parseIWAD(au, loadInfObJSON);
     String   dehSpec  = loadinfo_parseDeh(loadInfObJSON, wadSpec, dirPath);
     String   bexSpec  = loadinfo_parseBex(loadInfObJSON, wadSpec, dirPath);
-    boolean  britspec = loadinfo_parseBMaps(loadInfObJSON);
+    String   britspec = loadinfo_parseBMaps(loadInfObJSON);
     String   gwadspec = loadinfo_parseGWAD(loadInfObJSON);
     SpecFlag flagSpec = loadinfo_parseFlags(loadInfObJSON);
   
     //> Construct LoadConfig Object[s]
     if(wadSpec.length==1){
       return FormatUtils.arr1FromObj(new LoadConfig(au)
-      .setVal(wadSpec[0])
-      .setLbl(dirName)
-      .setFilepath_WAD(wadSpec[0])
-      .setFilepath_DEH(dehSpec)
-      .setFilepath_BEX(bexSpec)
-      .setFilepath_IWAD(iwadFilepathWithType(au, iwadSpec))
-      .setFilepath_BRIT(britspec)
-      .setFilepath_GWAD(gwadspec));
+      .setValΘ(wadSpec[0])
+      .setLblΘ(dirName)
+      .setFPΘ(ConfigProp.FP_WAD, wadSpec[0])
+      .setFPΘ(ConfigProp.FP_DEH, dehSpec)
+      .setFPΘ(ConfigProp.FP_DEH, bexSpec)
+      .setFPΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
+      .setFPΘ(ConfigProp.FP_BRIT, britspec)
+      .setFPΘ(ConfigProp.FP_GWAD, gwadspec));
     }
     else if(wadSpec.length>1){
       //> handles special `ALT_LEV_WAD` case s.t. both wad and level+wad are spec'd
       if(flagSpec==SpecFlag.ALT_LEV_WAD){
         return new LoadConfig[]{
           /* primary wad */  new LoadConfig(au)
-          .setVal(wadSpec[0])
-          .setLbl(dirName)
-          .setFilepath_WAD(wadSpec[0])
-          .setFilepath_DEH(dehSpec)
-          .setFilepath_IWAD(iwadFilepathWithType(au,iwadSpec))
-          .setFilepath_BRIT(britspec)
-          .setFilepath_GWAD(gwadspec),  
+          .setValΘ(wadSpec[0])
+          .setLblΘ(dirName)
+          .setFPΘ(ConfigProp.FP_WAD, wadSpec[0])
+          .setFPΘ(ConfigProp.FP_DEH, dehSpec)
+          .setFPΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
+          .setFPΘ(ConfigProp.FP_BRIT, britspec)
+          .setFPΘ(ConfigProp.FP_GWAD, gwadspec),
           /* spec-lev wad */ new LoadConfig(au)
-          .setVal(wadSpec[1])
-          .setLbl(dirName)
-          .setFilepath_WAD(wadSpec[0]+" "+wadSpec[1])
-          .setFilepath_DEH(dehSpec)
-          .setFilepath_IWAD(iwadFilepathWithType(au,iwadSpec))
-          .setFilepath_BRIT(britspec)
-          .setFilepath_GWAD(gwadspec)
+          .setValΘ(wadSpec[1])
+          .setLblΘ(dirName)
+          .setFPΘ(ConfigProp.FP_WAD, wadSpec[0]+" "+wadSpec[1])
+          .setFPΘ(ConfigProp.FP_DEH, dehSpec)
+          .setFPΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
+          .setFPΘ(ConfigProp.FP_BRIT, britspec)
+          .setFPΘ(ConfigProp.FP_GWAD, gwadspec)
         };
       }
       //> handles multi-wad spec
@@ -91,13 +91,13 @@ public class ConfigBuilder {
         LoadConfig[] ret = new LoadConfig[wadSpec.length];
         for (int i=0; i<wadSpec.length; i++){
           ret[i] = new LoadConfig(au)
-          .setVal(wadSpec[i])
-          .setLbl(dirName)
-          .setFilepath_WAD(wadSpec[i])
-          .setFilepath_DEH(dehSpec)
-          .setFilepath_IWAD(iwadFilepathWithType(au,iwadSpec))
-          .setFilepath_BRIT(britspec)
-          .setFilepath_GWAD(gwadspec);
+          .setValΘ(wadSpec[i])
+          .setLblΘ(dirName)
+          .setFPΘ(ConfigProp.FP_WAD, wadSpec[i])
+          .setFPΘ(ConfigProp.FP_DEH, dehSpec)
+          .setFPΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
+          .setFPΘ(ConfigProp.FP_BRIT, britspec)
+          .setFPΘ(ConfigProp.FP_GWAD, gwadspec);
         }
         return ret;
       }
@@ -181,8 +181,11 @@ public class ConfigBuilder {
     return null;
   }
 
-  private static boolean loadinfo_parseBMaps(JSONObject jObj){
-    try {return jObj.getBoolean("brights");} catch (Exception e){return false;}
+  private static String loadinfo_parseBMaps(JSONObject jObj){
+    boolean specsBrites = false;
+    try {specsBrites = jObj.getBoolean("brights");} 
+    catch (Exception e){;}
+    return specsBrites ? "" : null;
   }
 
   private static String loadinfo_parseGWAD(JSONObject jObj){

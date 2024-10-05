@@ -14,6 +14,7 @@ import PrEis.utils.FileSysUtils;
 import PrEis.utils.FormatUtils;
 import PrEis.utils.JAResourceUtil;
 import PrEis.utils.PrEisRes;
+import PrEis.utils.QueryUtils;
 import PrEis.utils.StringUtils;
 import processing.core.PApplet;
 import processing.core.PFont;
@@ -27,7 +28,7 @@ public class AppUtils {
    * the config command; instead only printing it to console. Make sure this is
    * set to <code>false</code> before building a release <i>(duh!)</i>
    */
-  private boolean DEBUG_NO_LAUNCH = false;
+  private boolean DEBUG_NO_LAUNCH = true;
 
   /** Used by launch Confirm Button to cancel/reset on debug no launch event. */
   public boolean getDebugNoLaunch(){return DEBUG_NO_LAUNCH;}
@@ -144,6 +145,28 @@ public class AppUtils {
     return dirPaths;
   }
 
+
+  private void setAppSessionLog(){
+    JSONObject appLog = null;
+    try {
+      appLog = app.loadJSONObject(AppMain.fullpathOf(EResPath.APP_LOG));
+    }
+    catch (Exception e){
+      Cons.err(StringUtils.concatAsSSV("File",EResPath.APP_LOG.get(),"failed to load!"));
+      app.exit();
+      return;
+    }
+    
+    JSONObject sessObj = new JSONObject();
+    String[][] sessInfo = curCfig.toKVStrArr();
+    sessObj.setString("date",QueryUtils.dateTimeToString());
+    for(String[] datum : sessInfo){sessObj.setString(datum[0], datum[1]);}
+    appLog.setJSONObject(QueryUtils.epochSecondToString(), sessObj);
+    app.saveJSONObject(appLog, AppMain.fullpathOf(EResPath.APP_LOG));
+  }
+
+
+
   /*============================================================================
   |>>> WAD Options/Configs Utils
   +===========================================================================*/
@@ -166,13 +189,23 @@ public class AppUtils {
     String [] wadNames = getMapsetWadDirNames(); 
     ArrayList <LoadConfig> lcArrList = new ArrayList<LoadConfig>();
     for (String n : wadNames){lcArrList.addAll(Arrays.asList(ConfigBuilder.build(this,n)));}
-    for(LoadConfig c : lcArrList){wadCfigs.put(c.value, c);}
+    for(LoadConfig c : lcArrList){wadCfigs.put(c.cf_val, c);}
   }
 
   @SuppressWarnings("deprecation") public void launchGZDoomWithCurConfig(){
-    if(DEBUG_NO_LAUNCH){Cons.log(curCfig.toLaunchCommand()); return;}
-    try{Runtime.getRuntime().exec(curCfig.toLaunchCommand()); app.exit(); return;}
-    catch (IOException e){Cons.err(e.getMessage());}
+    String launchCMD = curCfig.toLaunchCommand();
+    if(DEBUG_NO_LAUNCH){
+      System.out.println(launchCMD);
+    }
+    else{
+      try{Runtime.getRuntime().exec(launchCMD);}
+      catch (IOException e){Cons.err(e.getMessage());}
+    }
+    setAppSessionLog();
+    app.exit();
+    return;
   }
+
+
 
 }

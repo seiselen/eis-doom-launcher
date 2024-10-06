@@ -6,7 +6,7 @@ import PrEis.utils.StringUtils;
 public class LoadConfig {
 
   /** <b>Not Applicable</b> i.e. null */
-  public static final String NA = "-(N/A)-";
+  public static final String NA = "N/A";
 
   /** 
    * Bound to <code>UIToggle</code> s.t. if set <code>true</code>: gameplay WAD

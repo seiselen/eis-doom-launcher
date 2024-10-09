@@ -92,21 +92,7 @@ public class AppGUI {
       .setStyleProp("fill", Integer.class, appUtil.app.color(32))
     );
 
-    UIClick.create(
-      uim,
-      new BBox(appUtil.app.width-480, 12, 288, 40),
-      "LOAD PREVIOUS SESSION",
-      AppFont.TEXT,
-      new LoadPrevCfigAction(appUtil)
-    )
-    .setStyleProp("strk_enabled", Integer.class, appUtil.app.color(255,255,0))    
-    .setStyleProp("fill", Integer.class, appUtil.app.color(96,64,0))
-    .setStyleProp("fill_hovered", Integer.class, appUtil.app.color (128,96,0))
-    .setStyleProp("fill_clicked", Integer.class, appUtil.app.color (160,128,0))
-    .setStyleProp("fill_disabled", Integer.class, appUtil.app.color(64,32,0))    
-    .setTitle("Loads config used in most recent launch.")
-    
-    ;
+
 
     uim.bindUiObject(new UILauncherInfoPane(
       appUtil.app,
@@ -183,6 +169,22 @@ public class AppGUI {
     ;
 
 
+
+    UIClick.create(
+      uim,
+      new BBox(appUtil.app.width-480, 12, 288, 40),
+      "LOAD PREVIOUS SESSION",
+      AppFont.TEXT,
+      new LoadPrevCfigAction(appUtil,cfirm)
+    )
+    .setStyleProp("strk_enabled", Integer.class, appUtil.app.color(255,255,0))    
+    .setStyleProp("fill", Integer.class, appUtil.app.color(96,64,0))
+    .setStyleProp("fill_hovered", Integer.class, appUtil.app.color (128,96,0))
+    .setStyleProp("fill_clicked", Integer.class, appUtil.app.color (160,128,0))
+    .setStyleProp("fill_disabled", Integer.class, appUtil.app.color(64,32,0))    
+    .setTitle("Loads config used in most recent launch.")
+    
+    ;
 
 
     UIDropdown.create(uim, new BBox(DDOWN_XOFF, DDOWN_YOFF, DDOWN_WIDE, DDOWN_TALL))
@@ -278,10 +280,17 @@ class AppQuitAction implements IConfirmAction {
 
 
 class LoadPrevCfigAction implements IActionCallback {
-  AppUtils au;  
-  public LoadPrevCfigAction(AppUtils in_au){au=in_au;}
+  AppUtils  appUtils;
+  UIConfirm launchBtn;
+  public LoadPrevCfigAction(AppUtils in_appUtils, UIConfirm in_launchBtn){
+    appUtils  = in_appUtils;
+    launchBtn = in_launchBtn;
+  }
   public void action() {
-    LoadConfig cfig = au.getPrevConfig();
-    if(cfig!=null){au.setCurConfig(cfig);}
+    LoadConfig cfig = appUtils.getPrevConfig();
+    if(cfig!=null){
+      appUtils.setCurConfig(cfig);
+      if(launchBtn.isDisabledState()){launchBtn.toggleDisabled();}
+    }
   }
 }

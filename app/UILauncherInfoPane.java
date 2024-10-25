@@ -90,7 +90,7 @@ class UILauncherInfoPane extends UIContainer {
     );
 
     addChild(
-      UILabel.create(app, new BBox(xO, yO+32, 768, 48), " ", AF, LT, curTar)
+      UILabel.create(app, new BBox(xO, yO+32, 768, 80), " ", AF, LT, curTar)
       .setStyleProp("txt_anchor", PosOri.class, PosOri.TL)
       .setStyleProp("strk_transp", Integer.class, bordCol)
       .setStyleProp("fill_transp", Integer.class, fillCol)        

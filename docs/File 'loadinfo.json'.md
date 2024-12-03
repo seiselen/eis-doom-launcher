@@ -28,6 +28,9 @@
 	* `true|string[]`: multiple `wad|pk3`s and I want the app to list them all individually
 		* [!] they MUST share the same basal `iwad` and/or/xor `deh`, A/A
 		* `true` implies list every `wad|pk3` in the dir, `string[]` explicitly enumerates them 
+  * `false` || empty array i.e. `[]`: do **NOT** realize anything in this dir as an option!
+    * **usage:** for *'hiding'* mapsets i.e. of which I don't normally play ergo don't want in the selection list
+    * **real-world example usage:** `EndDoom Mapping Contest 2024` `WAD`s
 ## `gwad`
 * **Blurb:** Which gameplay `wad` or `pk3` should be used?
 * **Values/Options:**

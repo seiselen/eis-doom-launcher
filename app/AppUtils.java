@@ -218,7 +218,13 @@ public class AppUtils {
   private void loadAndInitOptions(){
     String [] wadNames = getMapsetWadDirNames(); 
     ArrayList <LoadConfig> lcArrList = new ArrayList<LoadConfig>();
-    for (String n : wadNames){lcArrList.addAll(Arrays.asList(ConfigBuilder.build(this,n)));}
+    LoadConfig [] buff;
+    for (String n : wadNames){
+      buff = ConfigBuilder.build(this,n);
+      //> universal null or empty array return handling
+      if(buff==null||buff.length==0){continue;}
+      lcArrList.addAll(Arrays.asList(buff));
+    }
     for(LoadConfig c : lcArrList){wadCfigs.put(c.cf_nam, c);}
   }
 

@@ -130,7 +130,8 @@ public class ConfigBuilder {
     try {if(jObj.getString("wad")!=null && !jObj.getString("wad").isEmpty()){return new String[]{
       FileSysUtils.pathConcat(wadDir,jObj.getString("wad"))};}} catch (Exception e){;}
     //> Handles implicit multi-wad specification
-    try {if(jObj.getBoolean("wad")){return au.getWADFilenamesFromDir(wadDir);}} catch (Exception e){;}
+    try {return jObj.getBoolean("wad")==true ? au.getWADFilenamesFromDir(wadDir) : new String[0];
+    } catch (Exception e){;}
     //> Handles explicit multi-wad specification (BOTH standard and for use with `ALT_LEV_WAD` flag)
     try {if(jObj.getJSONArray("wad")!=null){
       String[] jArr=jObj.getJSONArray("wad").toStringArray();

@@ -6,6 +6,7 @@ import PrEis.gui.LabelType;
 import PrEis.gui.PosOri;
 import PrEis.gui.UIContainer;
 import PrEis.gui.UILabel;
+import PrEis.gui.UIManager;
 import PrEis.utils.BBox;
 import PrEis.utils.StringUtils;
 import processing.core.PApplet;
@@ -19,6 +20,15 @@ class UILauncherInfoPane extends UIContainer {
     initStyles();
     initWidgets();
   }
+
+  public static UILauncherInfoPane create(AppUtils au, BBox bb){
+    return new UILauncherInfoPane(au.app, bb, au);
+  }
+
+  public static UILauncherInfoPane create(AppUtils au, UIManager um, BBox bb){
+    return new UILauncherInfoPane(au.app, bb, au).bindManager(um).castTo(UILauncherInfoPane.class);
+  }
+
 
   private void initStyles(){
     setStyleProp("fill", Integer.class, app.color(0,128));

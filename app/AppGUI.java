@@ -87,19 +87,10 @@ public class AppGUI {
     .setStyleProp("fill", Integer.class, appUtil.app.color(32))
     ;
 
-    uim.bindUiObject(new UILauncherInfoPane(
-      appUtil.app,
-      new BBox(SELPANE_XOFF, SELPANE_YOFF, SELPANE_WIDE, SELPANE_TALL),
-      appUtil
-    ));
+    UILauncherInfoPane.create(appUtil, uim, new BBox(SELPANE_XOFF, SELPANE_YOFF, SELPANE_WIDE, SELPANE_TALL));
 
-
-    UIContainer.create(
-      uim,
-      new BBox(SELPANE_XOFF, SELPANE_YOFF+SELPANE_TALL+32, SELPANE_WIDE, 64)   
-    )
+    UIContainer.create(uim, new BBox(SELPANE_XOFF, SELPANE_YOFF+SELPANE_TALL+32, SELPANE_WIDE, 64))
     .addChildren(
-
       UILabel.create(
         appUtil.app, new BBox(80, 16, 288, 32),
         "Use STD Brightmaps PK3?", AppFont.TEXT, LabelType.TP, null
@@ -119,8 +110,6 @@ public class AppGUI {
       .setStyleProp("txt_offset", PVector.class, new PVector(8,0))
       .setStyleProp("strk_transp", Integer.class, appUtil.app.color(255,0)),
 
-
-
       UIToggle.create(
         appUtil.app,
         new BBox(16, 8, 48, 48),
@@ -132,7 +121,6 @@ public class AppGUI {
       .setStyleProp("txt_offset", PVector.class, new PVector(1,3))
       .setStyleProp("txt_size", Integer.class, 40),
     
-
       UIToggle.create(
         appUtil.app,
         new BBox((SELPANE_WIDE/2)+16, 8, 48, 48),

@@ -16,7 +16,6 @@ import PrEis.gui.UIDropdown;
 import PrEis.gui.UILabel;
 import PrEis.gui.UIManager;
 import PrEis.gui.UIToggle;
-import PrEis.gui.WidgetType;
 import PrEis.utils.BBox;
 import PrEis.utils.DataStructUtils;
 import PrEis.utils.JAResourceUtil;
@@ -83,16 +82,10 @@ public class AppGUI {
 
   public void init(){
 
-    uim.bindUiObject(
-      new UIAppBar(appUtil.app, WidgetType.NA)
-      .bindAppLogoΘ(
-        appUtil.app.loadImage(AppMain.fullPathInAssetDir(EResPath.APPLOGO)),
-        new PVector(600, 64)
-      )
-      .setStyleProp("fill", Integer.class, appUtil.app.color(32))
-    );
-
-
+    UIAppBar.create(uim)
+    .bindAppLogoΘ(appUtil.app.loadImage(AppMain.fullPathInAssetDir(EResPath.APPLOGO)), new PVector(600, 64))
+    .setStyleProp("fill", Integer.class, appUtil.app.color(32))
+    ;
 
     uim.bindUiObject(new UILauncherInfoPane(
       appUtil.app,

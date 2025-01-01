@@ -30,6 +30,11 @@ class ToggleBrightAction implements IToggleCallback {
   public void toggleState() {LoadConfig.USE_GZDOOM_STD_BRIGHTS = !LoadConfig.USE_GZDOOM_STD_BRIGHTS;}
 }
 
+class ToggleLightsAction implements IToggleCallback {
+  public boolean getState() {return LoadConfig.USE_GZDOOM_STD_LIGHTS;}
+  public void toggleState() {LoadConfig.USE_GZDOOM_STD_LIGHTS = !LoadConfig.USE_GZDOOM_STD_LIGHTS;}  
+}
+
 class ToggleGModAction implements IToggleCallback {
   public boolean getState() {return LoadConfig.DISABLE_GPLAY_OVERRIDE;}
   public void toggleState() {LoadConfig.DISABLE_GPLAY_OVERRIDE = !LoadConfig.DISABLE_GPLAY_OVERRIDE;}
@@ -39,7 +44,7 @@ public class AppGUI {
 
   int SELPANE_XOFF    = 16;
   int SELPANE_YOFF    = 80;
-  int SELPANE_TALL    = 448;
+  int SELPANE_TALL    = 400;
   int SELPANE_WIDE    = 800;
 
   int DDOWN_WIDE      = 400;
@@ -56,7 +61,8 @@ public class AppGUI {
   private static final String LCH_BTN_WARN = "CLICK AGAIN TO CONFIRM + LAUNCH";
   private static final String LCH_BTN_DONE = "GZDOOM CLI LAUNCHED WITH CONFIG";
 
-  private static final String TOG_BTN_BRIT = "If toggled on: the GZDoom brightmaps PK3 file will be loaded.";
+  private static final String TOG_BTN_BRIT = "If toggled on: the GZDoom 'standard' brightmaps PK3 file will be loaded.";
+  private static final String TOG_BTN_LITE = "If toggled on: the GZDoom 'standard' lights PK3 file will be loaded.";  
   private static final String TOG_BTN_GMOD = "If toggled on: the specified gameplay mod will NOT be loaded.";
   
   AppUtils appUtil;
@@ -89,49 +95,15 @@ public class AppGUI {
 
     UILauncherInfoPane.create(appUtil, uim, new BBox(SELPANE_XOFF, SELPANE_YOFF, SELPANE_WIDE, SELPANE_TALL));
 
-    UIContainer.create(uim, new BBox(SELPANE_XOFF, SELPANE_YOFF+SELPANE_TALL+32, SELPANE_WIDE, 64))
-    .addChildren(
-      UILabel.create(
-        appUtil.app, new BBox(80, 16, 288, 32),
-        "Use STD Brightmaps PK3?", AppFont.TEXT, LabelType.TP, null
-      )
-      .setTitle(TOG_BTN_BRIT)
-      .setStyleProp("txt_anchor", PosOri.class, PosOri.LFT)
-      .setStyleProp("txt_offset", PVector.class, new PVector(8,0))
-      .setStyleProp("strk_transp", Integer.class, appUtil.app.color(255,0))
-      ,
-
-      UILabel.create(
-        appUtil.app, new BBox((SELPANE_WIDE/2)+80, 16, 288, 32),
-        "Disable Gameplay Mod?", AppFont.TEXT, LabelType.TP, null
-      )
-      .setTitle(TOG_BTN_GMOD)
-      .setStyleProp("txt_anchor", PosOri.class, PosOri.LFT)
-      .setStyleProp("txt_offset", PVector.class, new PVector(8,0))
-      .setStyleProp("strk_transp", Integer.class, appUtil.app.color(255,0)),
-
-      UIToggle.create(
-        appUtil.app,
-        new BBox(16, 8, 48, 48),
-        glyphChar("toggOn1"),
-        AppFont.GLYPH,
-        new ToggleBrightAction()
-      ).withOnOffLabels(glyphChar("toggOn1"), glyphChar("toggOff1"))
-      .setTitle(TOG_BTN_BRIT)
-      .setStyleProp("txt_offset", PVector.class, new PVector(1,3))
-      .setStyleProp("txt_size", Integer.class, 40),
-    
-      UIToggle.create(
-        appUtil.app,
-        new BBox((SELPANE_WIDE/2)+16, 8, 48, 48),
-        glyphChar("toggOn1"),
-        AppFont.GLYPH,
-        new ToggleGModAction()
-      ).withOnOffLabels(glyphChar("toggOn1"), glyphChar("toggOff1"))
-      .setTitle(TOG_BTN_GMOD)
-      .setStyleProp("txt_offset", PVector.class, new PVector(1,3))
-      .setStyleProp("txt_size", Integer.class, 40)
-      
+    UIContainer.create(uim, new BBox(SELPANE_XOFF, SELPANE_YOFF+SELPANE_TALL+16, SELPANE_WIDE, 144)).addChildren(
+      UILabel.create(appUtil.app,  new BBox(80, 24, 288, 32), "Use STD Brightmaps PK3?", AppFont.TEXT, LabelType.TP, null).setTitle(TOG_BTN_BRIT).setStyleProp("txt_anchor", PosOri.class, PosOri.LFT).setStyleProp("txt_offset", PVector.class, new PVector(8,0)).setStyleProp("strk_transp", Integer.class, appUtil.app.color(255,0)),
+      UIToggle.create(appUtil.app, new BBox(16, 16, 48, 48), glyphChar("toggOn1"), AppFont.GLYPH, new ToggleBrightAction()).withOnOffLabels(glyphChar("toggOn1"), glyphChar("toggOff1")).setTitle(TOG_BTN_BRIT).setStyleProp("txt_offset", PVector.class, new PVector(1,3)).setStyleProp("txt_size", Integer.class, 40),
+      //-----------------------------------------------------------------------#
+      UILabel.create(appUtil.app,  new BBox(80, 88, 288, 32), "Use STD Lights PK3?", AppFont.TEXT, LabelType.TP, null).setTitle(TOG_BTN_LITE).setStyleProp("txt_anchor", PosOri.class, PosOri.LFT).setStyleProp("txt_offset", PVector.class, new PVector(8,0)).setStyleProp("strk_transp", Integer.class, appUtil.app.color(255,0)),
+      UIToggle.create(appUtil.app, new BBox(16, 80, 48, 48), glyphChar("toggOn1"), AppFont.GLYPH, new ToggleLightsAction()).withOnOffLabels(glyphChar("toggOn1"), glyphChar("toggOff1")).setTitle(TOG_BTN_LITE).setStyleProp("txt_offset", PVector.class, new PVector(1,3)).setStyleProp("txt_size", Integer.class, 40),
+      //-----------------------------------------------------------------------#
+      UILabel.create(appUtil.app,  new BBox((SELPANE_WIDE/2)+80, 24, 288, 32), "Disable Gameplay Mod?", AppFont.TEXT, LabelType.TP, null).setTitle(TOG_BTN_GMOD).setStyleProp("txt_anchor", PosOri.class, PosOri.LFT).setStyleProp("txt_offset", PVector.class, new PVector(8,0)).setStyleProp("strk_transp", Integer.class, appUtil.app.color(255,0)),
+      UIToggle.create(appUtil.app, new BBox((SELPANE_WIDE/2)+16, 16, 48, 48), glyphChar("toggOn1"), AppFont.GLYPH, new ToggleGModAction()).withOnOffLabels(glyphChar("toggOn1"), glyphChar("toggOff1")).setTitle(TOG_BTN_GMOD).setStyleProp("txt_offset", PVector.class, new PVector(1,3)).setStyleProp("txt_size", Integer.class, 40)
     )
     .setStyleProp("fill", Integer.class, appUtil.app.color(0,128))
     .setStyleProp("strk_enabled", Integer.class, appUtil.app.color(224,240,255))    
@@ -140,7 +112,7 @@ public class AppGUI {
 
     UIConfirm cfirm = UIConfirm.create(
       uim,
-      new BBox(SELPANE_XOFF, SELPANE_YOFF+SELPANE_TALL+128, SELPANE_WIDE, 64),
+      new BBox(SELPANE_XOFF, SELPANE_YOFF+SELPANE_TALL+176, SELPANE_WIDE, 64),
       new LaunchButtonAction(appUtil)
     )
     .setButtonLabelsΘ(LCH_BTN_INIT, LCH_BTN_WARN, LCH_BTN_DONE)

@@ -41,12 +41,11 @@ class UILauncherInfoPane extends UIContainer {
 
     CurConfigUpdate   curTar;
     CurConfigUpdate[] targets = new CurConfigUpdate[]{
-      new CurConfigUpdate(aUtil, ConfigProp.CF_LBL,      "Config Name" ),
+      new CurConfigUpdate(aUtil, ConfigProp.CF_LBL,  "Config Name" ),
       new CurConfigUpdate(aUtil, ConfigProp.FP_GZD,  "GZDoom Path" ),
       new CurConfigUpdate(aUtil, ConfigProp.FP_IWAD, "iWAD Path"   ),
       new CurConfigUpdate(aUtil, ConfigProp.FP_WAD,  "WAD Path(s)" ),
       new CurConfigUpdate(aUtil, ConfigProp.FP_DEH,  "DEH/BEX Path"),
-      new CurConfigUpdate(aUtil, ConfigProp.FP_BRIT, "Brights Path"),
       new CurConfigUpdate(aUtil, ConfigProp.FP_GWAD, "Gameplay Mod")
     };
 
@@ -58,7 +57,7 @@ class UILauncherInfoPane extends UIContainer {
     int xS = xD+xO+24;
     int yD = 32;
     int yO = 8;
-    int yS = yD+8;
+    int yS = yD;
 
     addChild(
       UILabel.create(app, new BBox(xO, yO, 768, 40), "CURRENT SELECTION", AF, LT, null)
@@ -66,7 +65,7 @@ class UILauncherInfoPane extends UIContainer {
       .setStyleProp("txt_size", Integer.class, 32)
     );
 
-    yO+=48;
+    yO+=40;
 
     for(int i=0; i<targets.length; i++){
       curTar = targets[i];
@@ -74,7 +73,9 @@ class UILauncherInfoPane extends UIContainer {
         UILabel.create(app, new BBox(xO, yO, xD, yD), curTar.tarLabl, AF, LT, null)
         .setStyleProp("txt_anchor", PosOri.class, PosOri.LFT)
         .setStyleProp("strk_transp", Integer.class, bordCol)
-        .setStyleProp("fill_transp", Integer.class, fillCol),
+        .setStyleProp("fill_transp", Integer.class, fillCol)
+        .setStyleProp("txt_size", Integer.class, 20)
+        ,
 
         UILabel.create(app, new BBox(xS, yO, 584, yD), " ", AF, LT, curTar)
         .setStyleProp("txt_anchor", PosOri.class, PosOri.LFT)
@@ -100,7 +101,7 @@ class UILauncherInfoPane extends UIContainer {
     );
 
     addChild(
-      UILabel.create(app, new BBox(xO, yO+32, 768, 80), " ", AF, LT, curTar)
+      UILabel.create(app, new BBox(xO, yO+28, 768, 120), " ", AF, LT, curTar)
       .setStyleProp("txt_anchor", PosOri.class, PosOri.TL)
       .setStyleProp("strk_transp", Integer.class, bordCol)
       .setStyleProp("fill_transp", Integer.class, fillCol)        

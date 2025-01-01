@@ -127,6 +127,7 @@ public class AppUtils {
     pathdefs.put(EResPath.DP_IWADS,  srcDirsJSON.getString(EResPath.DP_IWADS.get()));
     pathdefs.put(EResPath.FP_GPLAY,  srcDirsJSON.getString(EResPath.FP_GPLAY.get()));
     pathdefs.put(EResPath.FP_BRIGHT, srcDirsJSON.getString(EResPath.FP_BRIGHT.get()));
+    pathdefs.put(EResPath.FP_LIGHTS, srcDirsJSON.getString(EResPath.FP_LIGHTS.get()));    
     pathdefs.put(EResPath.FP_DOOM,   filepathOf(EResPath.DP_IWADS, EResPath.FN_DOOM));
     pathdefs.put(EResPath.FP_DOOM2,  filepathOf(EResPath.DP_IWADS, EResPath.FN_DOOM2));
     pathdefs.put(EResPath.FP_PLUT,   filepathOf(EResPath.DP_IWADS, EResPath.FN_PLUT));

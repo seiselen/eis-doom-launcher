@@ -31,11 +31,12 @@ public enum EResPath {
   FP_PLUT,
   /** Filepath of <b>TNT</b> (Revolution) <code>iWAD</code>. */
   FP_TNT,
-
   /** <code>GZDoom</code> executable (i.e. <code>EXE</code>) filepath. */
   FP_GZDOOM,
   /** Brightmaps <code>WAD/PK3</code> filepath. */
   FP_BRIGHT,
+  /** Lights <code>WAD/PK3</code> filepath. */
+  FP_LIGHTS,
   /** <code>WAD/PK3</code> collection dirpath. */    
   DP_WADS,
   /** <code>iWAD</code>s dirpath. */  

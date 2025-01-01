@@ -8,6 +8,7 @@ public enum ConfigProp {
   FP_DEH,
   FP_WAD,
   FP_BRIT,
+  FP_LITE,
   FP_GWAD,
   CLI_CMD;
 

@@ -36,6 +36,7 @@ public class ConfigBuilder {
         .setLblΘ(dirName)
         .setPropΘ(ConfigProp.FP_WAD, fname)
         .setPropΘ(ConfigProp.FP_BRIT, null)
+        .setPropΘ(ConfigProp.FP_LITE, null)
       );
     }
   
@@ -49,6 +50,7 @@ public class ConfigBuilder {
     String   dehSpec  = loadinfo_parseDeh(loadInfObJSON, wadSpec, dirPath);
     String   bexSpec  = loadinfo_parseBex(loadInfObJSON, wadSpec, dirPath);
     String   britspec = loadinfo_parseBMaps(loadInfObJSON);
+    String   litespec = loadinfo_parseLights(loadInfObJSON);
     String   gwadspec = loadinfo_parseGWAD(loadInfObJSON);
     SpecFlag flagSpec = loadinfo_parseFlags(loadInfObJSON);
   
@@ -62,6 +64,7 @@ public class ConfigBuilder {
       .setPropΘ(ConfigProp.FP_DEH, bexSpec)
       .setPropΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
       .setPropΘ(ConfigProp.FP_BRIT, britspec)
+      .setPropΘ(ConfigProp.FP_LITE, litespec)
       .setPropΘ(ConfigProp.FP_GWAD, gwadspec));
     }
     else if(wadSpec.length>1){
@@ -75,6 +78,7 @@ public class ConfigBuilder {
           .setPropΘ(ConfigProp.FP_DEH, dehSpec)
           .setPropΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
           .setPropΘ(ConfigProp.FP_BRIT, britspec)
+          .setPropΘ(ConfigProp.FP_LITE, litespec)
           .setPropΘ(ConfigProp.FP_GWAD, gwadspec),
           /* spec-lev wad */ new LoadConfig(au)
           .setValΘ(wadSpec[1])
@@ -83,6 +87,7 @@ public class ConfigBuilder {
           .setPropΘ(ConfigProp.FP_DEH, dehSpec)
           .setPropΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
           .setPropΘ(ConfigProp.FP_BRIT, britspec)
+          .setPropΘ(ConfigProp.FP_LITE, litespec)
           .setPropΘ(ConfigProp.FP_GWAD, gwadspec)
         };
       }
@@ -97,6 +102,7 @@ public class ConfigBuilder {
           .setPropΘ(ConfigProp.FP_DEH, dehSpec)
           .setPropΘ(ConfigProp.FP_IWAD, iwadFilepathWithType(au, iwadSpec))
           .setPropΘ(ConfigProp.FP_BRIT, britspec)
+          .setPropΘ(ConfigProp.FP_LITE, litespec)
           .setPropΘ(ConfigProp.FP_GWAD, gwadspec);
         }
         return ret;
@@ -188,6 +194,11 @@ public class ConfigBuilder {
     catch (Exception e){;}
     return specsBrites ? "" : null;
   }
+
+  private static String loadinfo_parseLights(JSONObject jObj){
+    return null; //> should be analogous to BRIGHTS handling, but keeping to default `null` for now to KISS.
+  }
+
 
   private static String loadinfo_parseGWAD(JSONObject jObj){
     //> Handles 'use NO gwad' spec; and "none" is REQUIRED to distinguish such 

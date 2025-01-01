@@ -22,6 +22,16 @@ public class LoadConfig {
    */
   public static boolean USE_GZDOOM_STD_BRIGHTS = false;
 
+  /** 
+   * Bound to <code>UIToggle</code> s.t. if set <code>true</code>: 'standard'
+   * GZDoom lights <code>PK3</code> will be loaded.
+   * @implNote <b>NOTE:</b> Current behavior is that this <b>OVERRIDES</b> any
+   * existing extern lights spec! Ergo if a config has one, and it aint working:
+   * this is likely why (quick refactor if needed to fix, but #yolo and #KISS).
+   */
+  public static boolean USE_GZDOOM_STD_LIGHTS = false;
+
+
   AppUtils appUtil;
 
   /** Config Name/ID */
@@ -38,8 +48,11 @@ public class LoadConfig {
   String fp_wad;
   /** Gameplay <code>WAD|PK3</code> */
   String fp_gwad;
-  /** Brightmaps <code>PK3</code> */
+  /** (Standard) Brightmaps <code>PK3</code> */
   String fp_brit;
+  /** (Standard) Lights <code>PK3</code> */
+  String fp_lite;
+
 
   public LoadConfig(AppUtils iAppUtils){
     appUtil = iAppUtils;
@@ -48,7 +61,8 @@ public class LoadConfig {
     fp_gzd  = appUtil.getFilepath(EResPath.FP_GZDOOM);
     fp_iwad = appUtil.getFilepath(EResPath.FP_DOOM2);
     fp_gwad = appUtil.getFilepath(EResPath.FP_GPLAY);
-    fp_brit = appUtil.getFilepath(EResPath.FP_BRIGHT);    
+    fp_brit = appUtil.getFilepath(EResPath.FP_BRIGHT);
+    fp_lite = appUtil.getFilepath(EResPath.FP_LIGHTS);
   }
 
   /*----------------------------------------------------------------------------
@@ -74,6 +88,7 @@ public class LoadConfig {
     case FP_DEH  : if(val!=null){fp_deh=val;}  return;
     case FP_WAD  : if(val!=null){fp_wad=val;}  return;
     case FP_BRIT : if(val==null){fp_brit=null;} return;
+    case FP_LITE : if(val==null){fp_lite=null;} return;
     case FP_GWAD : if(val!=null){fp_gwad=(val.equals("none")) ? null : val;}; return;
     default      : return;
   }}
@@ -86,6 +101,9 @@ public class LoadConfig {
   private boolean hasBritPath(){return USE_GZDOOM_STD_BRIGHTS || fp_brit!=null;}
   private String  getBritPath(){return (USE_GZDOOM_STD_BRIGHTS) ? appUtil.getFilepath(EResPath.FP_BRIGHT) : fp_brit;}
 
+  private boolean hasLitePath(){return USE_GZDOOM_STD_LIGHTS || fp_lite!=null;}
+  private String  getLitePath(){return (USE_GZDOOM_STD_LIGHTS) ? appUtil.getFilepath(EResPath.FP_LIGHTS) : fp_lite;}
+
   public String toLaunchCommand(){
     String ret = fp_gzd + " -iwad "+fp_iwad;
     if(fp_iwad==null&&fp_gwad==null){return ret;}
@@ -95,7 +113,8 @@ public class LoadConfig {
     ret += " -file";
     if(fp_wad!=null){ret+=" "+fp_wad;}
     if(fp_deh!=null){ret+=" "+fp_deh;}
-    if(hasBritPath()){ret+=" "+getBritPath();}   
+    if(hasBritPath()){ret+=" "+getBritPath();}
+    if(hasLitePath()){ret+=" "+getLitePath();}    
     if(fp_gwad!=null && !DISABLE_GPLAY_OVERRIDE){ret+=" "+fp_gwad;}
     return ret;
   }
